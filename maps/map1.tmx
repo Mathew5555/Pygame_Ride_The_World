@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="Terrain (32x32).tsx"/>
+ <tileset firstgid="248" source="Platforms (32x32).tsx"/>
+ <tileset firstgid="272" source="Decorations (32x32).tsx"/>
+ <layer id="1" name="Слой тайлов 1" width="100" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztm81OxCAQx5eD+gquHvw4+JVdP55gX0KjF01Ws9HoRd//oEMsylZpgZmBKeWXzEKzLdDC/DvQdjKpVColsa1yt6Bis5e5P46h/pM6Jn6YZ74W51D/BbINtU/T4aOnFH0ayj3YNdgNIn2IqDf32OPUU8y53SLr0+PsLqKMHGPPhlNPMef2iqxPj7O3uKq9ye1LKYnxD5t5pH+EkNuXUqL9Ywn2CPbUmL1t511w+4dhGrDvPvTfAdihWs9Lx8c/+vqE2z80U7iWM0h31Xd+R/3Nl4C5f/RpdFefxPiH65p2Xd+FlS91/m/8w0ej7T6xtSOFf0xadeae/3MRE19pZlY+1f3DrjP3/J+L2PjK1g5f/8DGrYv+XdjbwM072DPYyz+p1odVx/8m/fCsCxu3hsRXXG3Iyax/l6Rwt8cVI0uJlyn0gRJp7YklVjMp9IESae2JJVYzx6ZX0pGmD9LakxpffTB62E71HPoU7KzJt7ddx2HbQwXHGgCmTF99MHrYTvUc+hLsqsm3t13HYdqzAcdvgm2p9XwMHGsAmDKx+nCk1vPt7dTtCYVjDQBTpoR4xjXesWPf9Uxh2vFfbsYYz0g+Z199cI0nO79qzGffnEiO4aSvH1BiYjsJGl35je0k69UYkaxXEvDRTEr9zKlXlPFjKZSqV0N934BCrySeu6T3DVJrnqRzN/StC0h/jo2B610LrrUKzZCfY1cqMYTqdOlz/hL51D/QR0r5vWNa2vu80ij5vj9EqO77nLFJZXhQ+HloGRLnpVKg8PPQMlLMS6n7vOT7U4pvAKj7nGLcjjmeL/W7j0qlUuHgC7yxU4c=
+  </data>
+ </layer>
+</map>
