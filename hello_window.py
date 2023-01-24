@@ -23,5 +23,11 @@ if __name__ == '__main__':
                 running = False
             if event.type == pygame.KEYDOWN:
                 running = False
+                font = pygame.font.Font(None, 50)
+                text = font.render('Загрузка...', True, (255, 255, 255))
+                text_x = 600
+                text_y = 800
+                screen.blit(text, (text_x, text_y))
+                pygame.display.flip()
                 main()
         pygame.display.flip()
