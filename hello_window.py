@@ -4,7 +4,6 @@ from main_menu import main, load_image
 
 MUSIC_DIR = "music/"
 IMAGES_DIR = "images/"
-FPS = 60
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1500, 1000
 FON = []
 
@@ -30,4 +29,5 @@ if __name__ == '__main__':
                 screen.blit(text, (text_x, text_y))
                 pygame.display.flip()
                 main()
+                break
         pygame.display.flip()
