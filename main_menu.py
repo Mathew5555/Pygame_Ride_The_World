@@ -69,6 +69,17 @@ def pic(picture, coords, add=(150, 60)):
     return image, imagerect
 
 
+def time_to_game(menu, timer):
+    if menu.both_checked():
+        timer += clock.tick(FPS)
+        if timer < 3000:
+            screen.blit(*menu.cd['bg'])
+        screen.blit(*menu.cd[max(3 - int(timer / 1000), 0)])
+    else:
+        timer = 0
+        clock.tick(FPS)
+
+
 def split_animated_gif(gif_file_path):
     ret = []
     gif = Image.open(gif_file_path)
@@ -117,14 +128,7 @@ def main():
                     menu.update(menu.btn_start1)
                 if menu.btn_start2[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
                     menu.update(menu.btn_start2)
-        if menu.both_checked():
-            timer += clock.tick(FPS)
-            if timer < 3000:
-                screen.blit(*menu.cd['bg'])
-            screen.blit(*menu.cd[max(3 - int(timer / 1000), 0)])
-        else:
-            timer = 0
-            clock.tick(FPS)
+        time_to_game(menu, timer)
         screen.blit(*menu.btn_start1)
         screen.blit(*menu.btn_start2)
         screen.blit(*menu.check_mark1)
