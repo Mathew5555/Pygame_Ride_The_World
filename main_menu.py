@@ -1,20 +1,15 @@
-import pygame
-import os
-import sys
 import random
-from PIL import Image
-
-
-MUSIC_DIR = "music/"
-IMAGES_DIR = "images/"
-FPS = 45
-WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1500, 1000
-FON = []
+from funcs_backend import *
+import pygame
+from consts import *
+from info_window import info
+from settings_window import settings
 
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
+RUNNING = True
 
 
 class Hero:
@@ -23,9 +18,11 @@ class Hero:
 
 class Menu:
     def __init__(self, shop='shop.png', info='info.png', start1='play1.png', start2='play1.png',
-                 check='check.png', platform='platform.png'):
+                 check='check.png', platform='platform.png', sett='setting.png', exit='exit.png'):
         self.btn_shop = pic(shop, (20, 20))
         self.btn_info = pic(info, (190, 20))
+        self.btn_sett = pic(sett, (360, 20), add=(60, 60))
+        self.btn_exit = pic(exit, (1330, 20))
         self.btn_start1 = pic(start1, (300, 800))
         self.btn_start2 = pic(start2, (1050, 800))
         self.check_mark1 = pic(check, (-400, -400), add=(40, 40))
@@ -36,6 +33,19 @@ class Menu:
                    2: pic('two.png', (700, 450), add=(100, 100)),
                    3: pic('three.png', (700, 450), add=(100, 100)),
                    'bg': pic('num_bg.png', (700, 425), add=(100, 190))}
+        self.effects = {j: pic(f'boom/{j}.png', (675, 425), add=(150, 150)) for j in range(1, 13)}
+
+    def render(self, screen):
+        screen.blit(*self.btn_start1)
+        screen.blit(*self.btn_start2)
+        screen.blit(*self.check_mark1)
+        screen.blit(*self.check_mark2)
+        screen.blit(*self.btn_shop)
+        screen.blit(*self.btn_info)
+        screen.blit(*self.btn_sett)
+        screen.blit(*self.btn_exit)
+        screen.blit(self.platform, (375 - self.platform.get_size()[0] // 2, 500))
+        screen.blit(self.platform, (1125 - self.platform.get_size()[0] // 2, 500))
 
     def update(self, btn):
         if btn == self.btn_start1:
@@ -61,12 +71,14 @@ class Menu:
         return self.check_mark1[1] != (-400, -400, 40, 40) and \
                self.check_mark2[1] != (-400, -400, 40, 40)
 
+    def open_info(self):
+        info()
 
-def pic(picture, coords, add=(150, 60)):
-    image = pygame.transform.scale(load_image(IMAGES_DIR + picture), add)
-    imagerect = image.get_rect()
-    imagerect.topleft = coords
-    return image, imagerect
+    def open_shop(self):
+        pass
+
+    def open_settings(self):
+        settings()
 
 
 def time_to_game(menu, timer):
@@ -75,77 +87,51 @@ def time_to_game(menu, timer):
         if timer < 3000:
             screen.blit(*menu.cd['bg'])
         screen.blit(*menu.cd[max(3 - int(timer / 1000), 0)])
+        if timer < 3000:
+            screen.blit(*menu.effects[max((timer % 1000) // 83, 1)])
     else:
         timer = 0
         clock.tick(FPS)
-
-
-def split_animated_gif(gif_file_path):
-    ret = []
-    gif = Image.open(gif_file_path)
-    for frame_index in range(gif.n_frames):
-        gif.seek(frame_index)
-        frame_rgba = gif.convert("RGBA")
-        pygame_image = pygame.image.fromstring(frame_rgba.tobytes(), frame_rgba.size,
-                                               frame_rgba.mode)
-        ret.append(pygame.transform.scale(pygame_image, WINDOW_SIZE))
-    return ret
-
-
-def load_image(name, colorkey=None):
-    # если файл не существует, то выходим
-    if not os.path.isfile(name):
-        print(f"Файл с изображением '{name}' не найден")
-        sys.exit()
-    image = pygame.image.load(name)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
+    return timer
 
 
 def main():
+    global RUNNING
     menu = Menu()
-    FON = split_animated_gif(IMAGES_DIR + 'fon.gif')[:]
-    running = True
-    ind = 0
-    clock.tick(FPS)
     play()
+    FON = split_animated_gif(IMAGES_DIR + 'fon.gif')[:]
+    ind = 0
     timer = 0
     clock.tick(FPS)
-    while running:
+    while RUNNING:
         screen.blit(FON[ind], (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
                 if menu.btn_start1[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
                     menu.update(menu.btn_start1)
                 if menu.btn_start2[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
                     menu.update(menu.btn_start2)
-        time_to_game(menu, timer)
-        screen.blit(*menu.btn_start1)
-        screen.blit(*menu.btn_start2)
-        screen.blit(*menu.check_mark1)
-        screen.blit(*menu.check_mark2)
-        screen.blit(*menu.btn_shop)
-        screen.blit(*menu.btn_info)
-        screen.blit(menu.platform, (375 - menu.platform.get_size()[0] // 2, 500))
-        screen.blit(menu.platform, (1125 - menu.platform.get_size()[0] // 2, 500))
+                if menu.btn_info[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                    menu.open_info()
+                if menu.btn_shop[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                    menu.open_shop()
+                if menu.btn_sett[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                    menu.open_settings()
+                if menu.btn_exit[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                    RUNNING = False
+                    break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LSHIFT:
+                    menu.update(menu.btn_start1)
+                elif event.key == pygame.K_RSHIFT:
+                    menu.update(menu.btn_start2)
+        timer = time_to_game(menu, timer)
+        menu.render(screen)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
-
-
-def play():
-    pygame.mixer.init()
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 4)]))
-    pygame.mixer.music.play(999)
-    pygame.mixer.music.set_volume(0.5)
 
 
 if __name__ == '__main__':
