@@ -33,12 +33,12 @@ class Menu:
         self.check_mark1 = pic(check, (-400, -400), add=(40, 40))
         self.check_mark2 = pic(check, (-400, -400), add=(40, 40))
         self.platform = load_image(IMAGES_DIR + platform)
-        self.cd = {0: pic('go.png', (650, 450), add=(200, 100)),
-                   1: pic('one.png', (700, 450), add=(100, 100)),
-                   2: pic('two.png', (700, 450), add=(100, 100)),
-                   3: pic('three.png', (700, 450), add=(100, 100)),
-                   'bg': pic('num_bg.png', (700, 425), add=(100, 190))}
-        self.effects = {j: pic(f'boom/{j}.png', (675, 425), add=(150, 150)) for j in range(1, 13)}
+        self.cd = {0: pic('go.png', (600, 425), add=(300, 150)),
+                   1: pic('one.png', (650, 400), add=(200, 200)),
+                   2: pic('two.png', (650, 400), add=(200, 200)),
+                   3: pic('three.png', (650, 400), add=(200, 200)),
+                   'bg': pic('num_bg.png', (650, 350), add=(200, 380))}
+        self.effects = {j: pic(f'boom/{j}.png', (600, 350), add=(300, 300)) for j in range(1, 13)}
 
     def render(self, screen):
         screen.blit(*self.btn_start1)
