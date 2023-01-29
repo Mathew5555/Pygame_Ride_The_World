@@ -126,19 +126,19 @@ def main():
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
-                if menu.btn_start1[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_start1[1].collidepoint(*mouse):
                     menu.update(menu.btn_start1)
-                if menu.btn_start2[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_start2[1].collidepoint(*mouse):
                     menu.update(menu.btn_start2)
-                if menu.btn_info[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_info[1].collidepoint(*mouse):
                     menu.open_info()
-                if menu.btn_shop[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_shop[1].collidepoint(*mouse):
                     menu.open_shop()
-                if menu.btn_sett[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_sett[1].collidepoint(*mouse):
                     menu.open_settings()
-                if menu.btn_guide[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
-                if menu.btn_exit[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if menu.btn_exit[1].collidepoint(*mouse):
                     RUNNING = False
                     break
             if event.type == pygame.KEYDOWN:
