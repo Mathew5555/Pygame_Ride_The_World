@@ -3,3 +3,4 @@ IMAGES_DIR = "images/"
 FPS = 45
 FPS2 = 30
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1500, 1000
+FONT = 'data/font.ttf'
