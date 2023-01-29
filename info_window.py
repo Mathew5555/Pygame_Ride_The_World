@@ -35,7 +35,7 @@ def info():
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
-                if info.btn_back[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if info.btn_back[1].collidepoint(*mouse):
                     info.back()
                     break
         info.render(screen)
