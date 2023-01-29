@@ -22,11 +22,12 @@ class Hero:
 class Menu:
     def __init__(self, shop='shop.png', info='info.png', start1='play1.png', start2='play1.png',
                  check='check.png', platform='platform.png', sett='setting.png', exit='exit.png',
-                 guide='user-guide.png'):
+                 guide='user-guide.png', wardrobe='wardrobe.png'):
         self.btn_shop = pic(shop, (20, 20))
         self.btn_info = pic(info, (190, 20))
         self.btn_sett = pic(sett, (360, 20), add=(60, 60))
         self.btn_guide = pic(guide, (440, 20), add=(60, 60))
+        self.btn_wb = pic(wardrobe, (520, 20), add=(60, 60))
         self.btn_exit = pic(exit, (1330, 20))
         self.btn_start1 = pic(start1, (300, 800))
         self.btn_start2 = pic(start2, (1050, 800))
@@ -50,6 +51,7 @@ class Menu:
         screen.blit(*self.btn_sett)
         screen.blit(*self.btn_exit)
         screen.blit(*self.btn_guide)
+        screen.blit(*self.btn_wb)
         screen.blit(self.platform, (375 - self.platform.get_size()[0] // 2, 500))
         screen.blit(self.platform, (1125 - self.platform.get_size()[0] // 2, 500))
 
@@ -81,6 +83,9 @@ class Menu:
         info()
 
     def open_shop(self):
+        pass
+
+    def open_wb(self):
         pass
 
     def open_guide(self):
@@ -138,6 +143,8 @@ def main():
                     menu.open_settings()
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
+                if menu.btn_guide[1].collidepoint(*mouse):
+                    menu.open_wb()
                 if menu.btn_exit[1].collidepoint(*mouse):
                     RUNNING = False
                     break
