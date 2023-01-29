@@ -23,11 +23,17 @@ class Volume:
 
     def text(self):
         font = pygame.font.Font(FONT, 45)
-        text = font.render('Настройка громкости', True, (255, 255, 255))
-        screen.blit(text, (50, 190))
+        text1 = font.render('Настройка громкости', True, (255, 255, 255))
+        screen.blit(text1, (50, 190))
+
+        font = pygame.font.Font(FONT, 20)
+        text2 = font.render('Для изменения уровня громкости используйте', True, (255, 255, 255))
+        screen.blit(text2, (50, 360))
+        text3 = font.render('кнопки громкости или клавиши "+" или "-"', True, (255, 255, 255))
+        screen.blit(text3, (50, 380))
 
     def render(self, screen):
-        bottom = pygame.Surface((540, 200))
+        bottom = pygame.Surface((540, 250))
         bottom.set_alpha(100)
         bottom.fill((255, 255, 255))
         screen.blit(bottom, (30, 180))
