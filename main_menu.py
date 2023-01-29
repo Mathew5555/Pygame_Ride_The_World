@@ -4,12 +4,15 @@ import pygame
 from consts import *
 from info_window import info
 from settings_window import settings
+from guide_window import guide
 
 
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
+SOUND_LEVEL = 0.5
 
 
 class Hero:
@@ -18,10 +21,12 @@ class Hero:
 
 class Menu:
     def __init__(self, shop='shop.png', info='info.png', start1='play1.png', start2='play1.png',
-                 check='check.png', platform='platform.png', sett='setting.png', exit='exit.png'):
+                 check='check.png', platform='platform.png', sett='setting.png', exit='exit.png',
+                 guide='user-guide.png'):
         self.btn_shop = pic(shop, (20, 20))
         self.btn_info = pic(info, (190, 20))
         self.btn_sett = pic(sett, (360, 20), add=(60, 60))
+        self.btn_guide = pic(guide, (440, 20), add=(60, 60))
         self.btn_exit = pic(exit, (1330, 20))
         self.btn_start1 = pic(start1, (300, 800))
         self.btn_start2 = pic(start2, (1050, 800))
@@ -44,6 +49,7 @@ class Menu:
         screen.blit(*self.btn_info)
         screen.blit(*self.btn_sett)
         screen.blit(*self.btn_exit)
+        screen.blit(*self.btn_guide)
         screen.blit(self.platform, (375 - self.platform.get_size()[0] // 2, 500))
         screen.blit(self.platform, (1125 - self.platform.get_size()[0] // 2, 500))
 
@@ -77,8 +83,18 @@ class Menu:
     def open_shop(self):
         pass
 
+    def open_guide(self):
+        guide()
+
     def open_settings(self):
-        settings()
+        global SOUND_LEVEL
+        SOUND_LEVEL = settings(SOUND_LEVEL)
+
+
+def play():
+    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 8)]))
+    pygame.mixer.music.play(1)
+    pygame.mixer.music.set_volume(SOUND_LEVEL)
 
 
 def time_to_game(menu, timer):
@@ -120,6 +136,8 @@ def main():
                     menu.open_shop()
                 if menu.btn_sett[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
                     menu.open_settings()
+                if menu.btn_guide[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                    menu.open_guide()
                 if menu.btn_exit[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
                     RUNNING = False
                     break
@@ -128,6 +146,11 @@ def main():
                     menu.update(menu.btn_start1)
                 elif event.key == pygame.K_RSHIFT:
                     menu.update(menu.btn_start2)
+        if not pygame.mixer.music.get_busy():
+            play()
+        if pygame.mixer.music.get_volume() != SOUND_LEVEL:
+            pygame.mixer.music.set_volume(SOUND_LEVEL)
+
         timer = time_to_game(menu, timer)
         menu.render(screen)
         pygame.display.flip()
