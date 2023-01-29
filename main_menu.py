@@ -5,6 +5,7 @@ from consts import *
 from info_window import info
 from settings_window import settings
 from guide_window import guide
+from wardrobe_window import wb
 
 
 pygame.init()
@@ -86,7 +87,7 @@ class Menu:
         pass
 
     def open_wb(self):
-        pass
+        wb()
 
     def open_guide(self):
         guide()
@@ -143,7 +144,7 @@ def main():
                     menu.open_settings()
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
-                if menu.btn_guide[1].collidepoint(*mouse):
+                if menu.btn_wb[1].collidepoint(*mouse):
                     menu.open_wb()
                 if menu.btn_exit[1].collidepoint(*mouse):
                     RUNNING = False

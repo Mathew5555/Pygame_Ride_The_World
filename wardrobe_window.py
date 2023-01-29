@@ -1,0 +1,48 @@
+from funcs_backend import *
+import pygame
+from consts import *
+
+
+pygame.init()
+screen = pygame.display.set_mode(WINDOW_SIZE)
+clock = pygame.time.Clock()
+RUNNING = True
+
+
+class Wardrobe:
+    def __init__(self, back='back.png'):
+        self.btn_back = pic(back, (20, 20))
+
+    def render(self, screen):
+        screen.blit(*self.btn_back)
+
+    def back(self):
+        global RUNNING
+        RUNNING = False
+
+
+def wb():
+    global RUNNING
+    wardrobe = Wardrobe()
+    FON = split_animated_gif(IMAGES_DIR + 'fon_wb.gif')[:]
+    ind = 0
+    RUNNING = True
+    clock.tick(FPS2)
+    while RUNNING:
+        screen.blit(FON[ind], (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                RUNNING = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse = pygame.mouse.get_pos()
+                if wardrobe.btn_back[1].collidepoint(*mouse):
+                    wardrobe.back()
+                    break
+        wardrobe.render(screen)
+        pygame.display.flip()
+        ind = (ind + 1) % len(FON)
+        clock.tick(FPS2)
+
+
+if __name__ == '__main__':
+    wb()
