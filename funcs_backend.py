@@ -39,10 +39,3 @@ def pic(picture, coords, add=(150, 60)):
     imagerect = image.get_rect()
     imagerect.topleft = coords
     return image, imagerect
-
-
-def play():
-    pygame.mixer.init()
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 4)]))
-    pygame.mixer.music.play(999)
-    pygame.mixer.music.set_volume(SOUND_LEVEL)
