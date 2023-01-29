@@ -21,12 +21,23 @@ class Volume:
         for i in range(10):
             self.lvls.append((pygame.rect.Rect(50 * (i + 1), 260, 50, 30), self.colors[i]))
 
+    def text(self):
+        font = pygame.font.Font(FONT, 45)
+        text = font.render('Настройка громкости', True, (255, 255, 255))
+        screen.blit(text, (50, 190))
+
     def render(self, screen):
+        bottom = pygame.Surface((540, 200))
+        bottom.set_alpha(100)
+        bottom.fill((255, 255, 255))
+        screen.blit(bottom, (30, 180))
+        #pygame.draw.rect(screen, pygame.Color(255, 255, 255, 200), (30, 160, 540, 200), border_radius=15)
         for i in range(int(10 * CURR_VOLUME)):
             pygame.draw.rect(screen, self.lvls[i][1], self.lvls[i][0])
         pygame.draw.rect(screen, (0, 0, 0), pygame.rect.Rect(50, 260, 500, 30).inflate(5, 5), 5)
         screen.blit(*self.btn_plus)
         screen.blit(*self.btn_minus)
+        self.text()
 
     def plus(self):
         global CURR_VOLUME
@@ -66,20 +77,27 @@ def settings(old_volume):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 RUNNING = False
+            fl = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
                 if setting.btn_back[1].collidepoint(*mouse):
                     setting.back()
                     break
-                fl = False
                 if setting.volume_box.btn_plus[1].collidepoint(*mouse):
                     setting.volume_box.plus()
                     fl = True
                 if setting.volume_box.btn_minus[1].collidepoint(*mouse):
                     setting.volume_box.minus()
                     fl = True
-                if fl:
-                    pygame.mixer.music.set_volume(CURR_VOLUME)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_EQUALS:
+                    setting.volume_box.plus()
+                    fl = True
+                elif event.key == pygame.K_MINUS:
+                    setting.volume_box.minus()
+                    fl = True
+            if fl:
+                pygame.mixer.music.set_volume(CURR_VOLUME)
         setting.render(screen)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
