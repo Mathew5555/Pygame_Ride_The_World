@@ -92,7 +92,7 @@ class Menu:
 
 
 def play():
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 8)]))
+    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 14)]))
     pygame.mixer.music.play(1)
     pygame.mixer.music.set_volume(SOUND_LEVEL)
 
