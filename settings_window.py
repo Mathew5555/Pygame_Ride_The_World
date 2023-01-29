@@ -68,14 +68,14 @@ def settings(old_volume):
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
-                if setting.btn_back[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if setting.btn_back[1].collidepoint(*mouse):
                     setting.back()
                     break
                 fl = False
-                if setting.volume_box.btn_plus[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if setting.volume_box.btn_plus[1].collidepoint(*mouse):
                     setting.volume_box.plus()
                     fl = True
-                if setting.volume_box.btn_minus[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
+                if setting.volume_box.btn_minus[1].collidepoint(*mouse):
                     setting.volume_box.minus()
                     fl = True
                 if fl:

@@ -23,7 +23,7 @@ class Guide:
 
 def guide():
     global RUNNING
-    info = Guide()
+    guide_w = Guide()
     FON = split_animated_gif(IMAGES_DIR + 'fon_guide.gif')[:]
     ind = 0
     RUNNING = True
@@ -35,14 +35,14 @@ def guide():
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
-                if info.btn_back[1].colliderect(pygame.rect.Rect(*mouse, 10, 10)):
-                    info.back()
+                if guide_w.btn_back[1].collidepoint(*mouse):
+                    guide_w.back()
                     break
-        info.render(screen)
+        guide_w.render(screen)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
         clock.tick(FPS)
 
 
 if __name__ == '__main__':
-    info()
+    guide()
