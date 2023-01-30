@@ -52,7 +52,10 @@ class Wardrobe:
         cnt = 0
         for i in range(self.ind - 3, self.ind):
             screen.blit(*pic(self.player1[i], (200 + cnt * 400, 350), add=(300, 300)))
-            line = self.font.render(f'Костюм {i + len(self.player1)}', True, (255, 255, 255))
+            k = (i + len(self.player1) + 1) % len(self.player1)
+            if k == 0:
+                k = len(self.player1)
+            line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
             screen.blit(line, (200 + cnt * 400 + 50, 700))
             cnt += 1
 
@@ -60,13 +63,19 @@ class Wardrobe:
         cnt = 0
         for i in range(self.ind - 3, self.ind):
             screen.blit(*pic(self.player2[i], (200 + cnt * 400, 350), add=(300, 300)))
-            line = self.font.render(f'Костюм {i + len(self.player2)}', True, (255, 255, 255))
+            k = (i + len(self.player2) + 1) % len(self.player2)
+            if k == 0:
+                k = len(self.player2)
+            line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
             screen.blit(line, (200 + cnt * 400 + 50, 700))
             cnt += 1
 
     def next(self):
         self.ind += 1
-        self.ind = self.ind % 4
+        if self.curr_pl == 1:
+            self.ind = self.ind % self.maxx1
+        elif self.curr_pl == 2:
+            self.ind = self.ind % self.maxx2
 
     def previous(self):
         self.ind -= 1
