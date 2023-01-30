@@ -8,7 +8,7 @@ MAPS_DIR = "maps/"
 MUSIC_DIR = "music/"
 IMAGES_DIR = "images/"
 FPS = 60
-WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 500, 960
+WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
 MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
 all_sprites = pygame.sprite.Group()
 player1_sprite = pygame.sprite.Sprite()
