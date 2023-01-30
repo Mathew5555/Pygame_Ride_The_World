@@ -51,23 +51,31 @@ class Wardrobe:
     def render1_wb(self):
         cnt = 0
         for i in range(self.ind - 3, self.ind):
-            screen.blit(*pic(self.player1[i], (200 + cnt * 400, 350), add=(300, 300)))
-            k = (i + len(self.player1) + 1) % len(self.player1)
-            if k == 0:
-                k = len(self.player1)
-            line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
-            screen.blit(line, (200 + cnt * 400 + 50, 700))
+            try:
+                screen.blit(*pic(self.player1[i], (200 + cnt * 400, 350), add=(300, 300)))
+                k = (i + len(self.player1) + 1) % len(self.player1)
+                if k == 0:
+                    k = len(self.player1)
+                line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
+                screen.blit(line, (200 + cnt * 400 + 50, 700))
+            except Exception:
+                cnt += 1
+                continue
             cnt += 1
 
     def render2_wb(self):
         cnt = 0
         for i in range(self.ind - 3, self.ind):
-            screen.blit(*pic(self.player2[i], (200 + cnt * 400, 350), add=(300, 300)))
-            k = (i + len(self.player2) + 1) % len(self.player2)
-            if k == 0:
-                k = len(self.player2)
-            line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
-            screen.blit(line, (200 + cnt * 400 + 50, 700))
+            try:
+                screen.blit(*pic(self.player2[i], (200 + cnt * 400, 350), add=(300, 300)))
+                k = (i + len(self.player2) + 1) % len(self.player2)
+                if k == 0:
+                    k = len(self.player2)
+                line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
+                screen.blit(line, (200 + cnt * 400 + 50, 700))
+            except Exception:
+                cnt += 1
+                continue
             cnt += 1
 
     def next(self):
