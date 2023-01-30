@@ -8,6 +8,7 @@ import random
 
 pygame.mixer.init()
 sound = pygame.mixer.Sound('data/mouse.mp3')
+sound.set_volume(0.5)
 
 
 def load_image(name, colorkey=None):
