@@ -1,49 +1,54 @@
 import pygame
 
-size = width, height = 700, 700
+size = width, height = 1500, 1000
 FPS = 60
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, id):
         super().__init__(all_sprites)
+        self.id = id
         self.direction = "right"
         self.cur_frame = 0
         self.sheet()
-        self.stand_r = pygame.transform.scale(pygame.image.load("Base pack/Player/p1_stand.png").convert_alpha(),
-                                              (50, 70))
         self.image = self.stand_r
-        self.stand_l = pygame.transform.flip(self.stand_r, True, False)
         self.rect = pygame.Rect(0, 0, 50, 70)
 
     def sheet(self):
-        self.jump = pygame.transform.scale(pygame.image.load("Base pack/Player/p1_jump.png").convert_alpha(), (50, 70))
-        self.land = pygame.transform.scale(pygame.image.load("Base pack/Player/p1_duck.png").convert_alpha(), (50, 70))
+        self.stand_r = pygame.transform.scale(
+            pygame.image.load(f"Base pack/Player/p{self.id}_stand.png").convert_alpha(), (50, 70))
+        self.stand_l = pygame.transform.flip(self.stand_r, True, False)
+        self.jump_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_jump.png").convert_alpha(),
+                                             (50, 70))
+        self.jump_l = pygame.transform.flip(self.jump_r, True, False)
+        self.land_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_hurt.png").convert_alpha(),
+                                             (50, 70))
+        self.land_l = pygame.transform.flip(self.land_r, True, False)
         right = [
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk01.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk02.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk03.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk04.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk05.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk06.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk07.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk08.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk09.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk10.png").convert_alpha(),
-            pygame.image.load("Base pack/Player/p1_walk/PNG/p1_walk11.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk01.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk02.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk03.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk04.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk05.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk06.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk07.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk08.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk09.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk10.png").convert_alpha(),
+            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk11.png").convert_alpha(),
         ]
         self.right = [pygame.transform.scale(image, (50, 70)) for image in right]
         self.left = [pygame.transform.flip(image, True, False) for image in self.right]
 
-    def update_check(self):
-        if self.rect.topleft[0] < 0:
-            self.rect.x = 0
-        if self.rect.bottomright[0] > width:
-            self.rect.x = width - self.rect.w - 1
-        if self.rect.topleft[1] < 0:
-            self.rect.y = 0
-        if self.rect.bottomright[1] > height:
-            self.rect.y = height - self.rect.h - 1
+    # def update_check(self):
+    #     if self.rect.topleft[0] < 0:
+    #         self.rect.x = 0
+    #     if self.rect.bottomright[0] > width:
+    #         self.rect.x = width - self.rect.w - 1
+    #     if self.rect.topleft[1] < 0:
+    #         self.rect.y = 0
+    #     if self.rect.bottomright[1] > height:
+    #         self.rect.y = height - self.rect.h - 1
 
     def update(self, keys):
         flag = 0
@@ -62,17 +67,22 @@ class Hero(pygame.sprite.Sprite):
         if keys[pygame.K_w]:
             self.rect.y -= 5
             flag = 1
-            self.image = self.jump
+            if self.direction == "left":
+                self.image = self.jump_l
+            else:
+                self.image = self.jump_r
         if keys[pygame.K_s]:
             self.rect.y += 5
             flag = 1
-            self.image = self.land
+            if self.direction == "left":
+                self.image = self.land_l
+            else:
+                self.image = self.land_r
         if not flag:
             if self.direction == "left":
                 self.image = self.stand_l
             else:
                 self.image = self.stand_r
-        self.update_check()
 
 
 # class Map:
@@ -141,7 +151,7 @@ all_sprites = pygame.sprite.Group()
 player1_sprite = pygame.sprite.Sprite()
 # platforms = pygame.sprite.Group()
 
-hero1 = Hero()
+hero1 = Hero(1)
 game = Game(hero1)
 running = True
 while running:
