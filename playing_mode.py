@@ -8,7 +8,7 @@ MAPS_DIR = "maps/"
 MUSIC_DIR = "music/"
 IMAGES_DIR = "images/"
 FPS = 60
-WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
+WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 500, 960
 MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
 all_sprites = pygame.sprite.Group()
 player1_sprite = pygame.sprite.Sprite()
@@ -17,7 +17,6 @@ player1_sprite = pygame.sprite.Sprite()
 def get_tile_properties(tmxdata, x, y):
     tile_x = x // 32
     tile_y = y // 32
-    layer = tmxdata.layers[0]
     try:
         properties = tmxdata.get_tile_properties(tile_x, tile_y, 0)
     except ValueError:
@@ -104,7 +103,7 @@ class Hero(pygame.sprite.Sprite):
     def update(self, keys, map):
         flag = 0
         if keys[pygame.K_a]:
-            left_tile = get_tile_properties(map.map, self.rect.x - 4, self.rect.y + 26)
+            left_tile = get_tile_properties(map.map, self.rect.x - 3, self.rect.y + 26)
             if left_tile['solid'] == 0:
                 self.rect.x -= 3
                 self.cur_frame = (self.cur_frame + 1) % len(self.left)
@@ -119,17 +118,17 @@ class Hero(pygame.sprite.Sprite):
                 self.image = self.right[self.cur_frame]
                 flag = 1
             self.direction = "right"
-        standing_on = get_tile_properties(map.map, self.rect.x + 20, self.rect.y + 50)
-        print(standing_on, )
+        standing_on = get_tile_properties(map.map, self.rect.midbottom[0] + 5, self.rect.y + 50)
+        print(standing_on)
         if keys[pygame.K_w]:
             if standing_on['solid'] == 1:
-                self.jump_frame = 15
-            self.rect.y -= 3
-            flag = 1
-            if self.direction == "left":
-                self.image = self.jump_l
-            else:
-                self.image = self.jump_r
+                self.jump_frame = 20
+                flag = 1
+                if self.direction == "left":
+                    self.image = self.jump_l
+                else:
+                    self.image = self.jump_r
+            # self.rect.y -= 3
         # if keys[pygame.K_s]:
         #     self.rect.y += 3
         #     flag = 1
@@ -137,21 +136,20 @@ class Hero(pygame.sprite.Sprite):
         #         self.image = self.land_l
         #     else:
         #         self.image = self.land_r
-        print(self.rect)
         if not flag:
             if self.direction == "left":
                 self.image = self.stand_l
             else:
                 self.image = self.stand_r
         if self.jump_frame > 0:
-            above_tile = get_tile_properties(map.map, self.rect.x + 20, self.rect.y - 3)
+            above_tile = get_tile_properties(map.map, self.rect.x + 20, self.rect.y - 6)
             if above_tile['solid'] == 0:
-                self.rect.y = self.rect.y - 3
+                self.rect.y = self.rect.y - 6
                 self.jump_frame -= 1
             else:
                 self.jump_frame = 0
         elif standing_on['solid'] == 0:
-            self.rect.y = self.rect.y + 3
+            self.rect.y = self.rect.y + 6
 
 
 class Game:
