@@ -10,7 +10,6 @@ from account_info_window import acc
 
 
 pygame.init()
-pygame.mixer.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
@@ -148,6 +147,7 @@ def main():
             if event.type == pygame.QUIT:
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                sound.play(0)
                 mouse = pygame.mouse.get_pos()
                 if menu.btn_start1[1].collidepoint(*mouse):
                     menu.update(menu.btn_start1)

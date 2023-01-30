@@ -115,14 +115,13 @@ def wb():
     ind = 0
     RUNNING = True
     clock.tick(FPS2)
-    fl = False
-    timer = 0
     while RUNNING:
         screen.blit(FON[ind], (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                sound.play(0)
                 mouse = pygame.mouse.get_pos()
                 if wardrobe.btn_back[1].collidepoint(*mouse):
                     wardrobe.back()

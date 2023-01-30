@@ -97,6 +97,7 @@ def info():
             if event.type == pygame.QUIT:
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                sound.play(0)
                 mouse = pygame.mouse.get_pos()
                 if info.btn_back[1].collidepoint(*mouse):
                     info.back()

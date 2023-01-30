@@ -6,6 +6,10 @@ from consts import *
 import random
 
 
+pygame.mixer.init()
+sound = pygame.mixer.Sound('data/mouse.mp3')
+
+
 def load_image(name, colorkey=None):
     # если файл не существует, то выходим
     if not os.path.isfile(name):
