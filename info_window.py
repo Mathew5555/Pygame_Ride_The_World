@@ -102,6 +102,9 @@ def info():
                     info.back()
                     break
         info.render(screen)
+        sound_level = float(
+            open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
+        check_busy(sound_level)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
         clock.tick(FPS)

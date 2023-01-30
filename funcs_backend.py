@@ -39,3 +39,30 @@ def pic(picture, coords, add=(150, 60)):
     imagerect = image.get_rect()
     imagerect.topleft = coords
     return image, imagerect
+
+
+def play():
+    data_ = [i.strip('\n') for i in open('data/sound.txt', mode='r', encoding='utf-8').readlines()]
+    last, sound_lvl = data_[1], float(data_[0])
+    tr = random.choice(TRACKS)
+    while tr == last:
+        tr = random.choice(TRACKS)
+    file = open('data/sound.txt', mode='w', encoding='utf-8')
+    file.write(f'{sound_lvl}\n{tr}')
+    pygame.mixer.music.load(tr)
+    pygame.mixer.music.play(1)
+    pygame.mixer.music.set_volume(sound_lvl)
+
+
+def check_busy(sound_level):
+    if not pygame.mixer.music.get_busy():
+        play()
+    if round(pygame.mixer.music.get_volume(), 1) != sound_level:
+        sound_level = round(sound_level, 1)
+        file1 = open('data/sound.txt', mode='r', encoding='utf-8')
+        data = file1.readlines()
+        file1.close()
+        file2 = open('data/sound.txt', mode='w', encoding='utf-8')
+        pygame.mixer.music.set_volume(sound_level)
+        file2.write(f'{sound_level}\n{data[1]}')
+        file2.close()

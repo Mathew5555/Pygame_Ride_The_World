@@ -7,7 +7,6 @@ pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
-CURR_VOLUME = 0
 
 
 class Volume:
@@ -32,28 +31,24 @@ class Volume:
         text3 = font.render('кнопки громкости или клавиши "+" или "-"', True, (255, 255, 255))
         screen.blit(text3, (50, 380))
 
-    def render(self, screen):
+    def render(self, screen, curr):
         bottom = pygame.Surface((540, 250))
         bottom.set_alpha(100)
         bottom.fill((255, 255, 255))
         screen.blit(bottom, (30, 180))
-        #pygame.draw.rect(screen, pygame.Color(255, 255, 255, 200), (30, 160, 540, 200), border_radius=15)
-        for i in range(int(10 * CURR_VOLUME)):
+        # pygame.draw.rect(screen, pygame.Color(255, 255, 255, 200), (30, 160, 540, 200), border_radius=15)
+        for i in range(int(10 * curr)):
             pygame.draw.rect(screen, self.lvls[i][1], self.lvls[i][0])
         pygame.draw.rect(screen, (0, 0, 0), pygame.rect.Rect(50, 260, 500, 30).inflate(5, 5), 5)
         screen.blit(*self.btn_plus)
         screen.blit(*self.btn_minus)
         self.text()
 
-    def plus(self):
-        global CURR_VOLUME
-        CURR_VOLUME += 0.1
-        CURR_VOLUME = min(round(CURR_VOLUME, 1), 1)
+    def plus(self, curr):
+        return min(round(curr + 0.1, 1), 1)
 
-    def minus(self):
-        global CURR_VOLUME
-        CURR_VOLUME -= 0.1
-        CURR_VOLUME = max(round(CURR_VOLUME, 1), 0)
+    def minus(self, curr):
+        return max(round(curr - 0.1, 1), 0)
 
 
 class Settings:
@@ -61,55 +56,48 @@ class Settings:
         self.btn_back = pic(back, (20, 20))
         self.volume_box = Volume()
 
-    def render(self, screen):
+    def render(self, screen, curr):
         screen.blit(*self.btn_back)
-        self.volume_box.render(screen)
+        self.volume_box.render(screen, curr)
 
     def back(self):
         global RUNNING
         RUNNING = False
 
 
-def settings(old_volume):
-    global RUNNING, CURR_VOLUME
+def settings():
+    global RUNNING
     setting = Settings()
     FON = split_animated_gif(IMAGES_DIR + 'fon_sett.gif')[:]
     ind = 0
     RUNNING = True
     clock.tick(FPS2)
-    CURR_VOLUME = old_volume
+    curr = float(open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
     while RUNNING:
         screen.blit(FON[ind], (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 RUNNING = False
-            fl = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 mouse = pygame.mouse.get_pos()
                 if setting.btn_back[1].collidepoint(*mouse):
                     setting.back()
                     break
                 if setting.volume_box.btn_plus[1].collidepoint(*mouse):
-                    setting.volume_box.plus()
-                    fl = True
+                    curr = setting.volume_box.plus(curr)
                 if setting.volume_box.btn_minus[1].collidepoint(*mouse):
-                    setting.volume_box.minus()
-                    fl = True
+                    curr = setting.volume_box.minus(curr)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_EQUALS:
-                    setting.volume_box.plus()
-                    fl = True
+                    curr = setting.volume_box.plus(curr)
                 elif event.key == pygame.K_MINUS:
-                    setting.volume_box.minus()
-                    fl = True
-            if fl:
-                pygame.mixer.music.set_volume(CURR_VOLUME)
-        setting.render(screen)
+                    curr = setting.volume_box.minus(curr)
+        setting.render(screen, curr)
+        check_busy(curr)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
         clock.tick(FPS2)
-    return CURR_VOLUME
 
 
 if __name__ == '__main__':
-    settings(1)
+    settings()
