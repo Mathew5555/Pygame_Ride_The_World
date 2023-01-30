@@ -6,6 +6,7 @@ from info_window import info
 from settings_window import settings
 from guide_window import guide
 from wardrobe_window import wb
+from account_info_window import acc
 
 
 pygame.init()
@@ -14,27 +15,48 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
 SOUND_LEVEL = 0.5
+LAST = ''
+PLATFORMS = pygame.sprite.Group()
 
 
 class Hero:
     pass
 
 
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, image, x):
+        super().__init__(PLATFORMS)
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.update(x, 500, self.rect[2], self.rect[3])
+        self.mask = pygame.mask.from_surface(self.image)
+
+        load_image(IMAGES_DIR + 'platform.png')
+
+
 class Menu:
-    def __init__(self, shop='shop.png', info='info.png', start1='play1.png', start2='play1.png',
-                 check='check.png', platform='platform.png', sett='setting.png', exit='exit.png',
-                 guide='user-guide.png', wardrobe='wardrobe.png'):
-        self.btn_shop = pic(shop, (20, 20))
-        self.btn_info = pic(info, (190, 20))
-        self.btn_sett = pic(sett, (360, 20), add=(60, 60))
-        self.btn_guide = pic(guide, (440, 20), add=(60, 60))
-        self.btn_wb = pic(wardrobe, (520, 20), add=(60, 60))
+    def __init__(self, shop='store.png', info='info.png', start1='play1.png', start2='play1.png',
+                 check='check.png', sett='setting.png', exit='exit.png', plat='platform.png',
+                 guide='user-guide.png', wardrobe='wardrobe.png', acc_im='user.png', logo='logo.png'):
+        self.btn_acc = pic(acc_im, (20, 20), add=(70, 70))
+        self.btn_shop = pic(shop, (110, 20), add=(70, 70))
+        self.btn_wb = pic(wardrobe, (200, 20), add=(70, 70))
+
+        self.btn_sett = pic(sett, (980, 20), add=(70, 70))
+        self.btn_guide = pic(guide, (1070, 20), add=(70, 70))
+        self.btn_info = pic(info, (1160, 20))
         self.btn_exit = pic(exit, (1330, 20))
+
+        self.logo_image = pic(logo, (600, 150), add=(300, 200))
+
         self.btn_start1 = pic(start1, (300, 800))
         self.btn_start2 = pic(start2, (1050, 800))
         self.check_mark1 = pic(check, (-400, -400), add=(40, 40))
         self.check_mark2 = pic(check, (-400, -400), add=(40, 40))
-        self.platform = load_image(IMAGES_DIR + platform)
+        plat_pic = load_image(IMAGES_DIR + plat)
+        self.platform1 = Platform(plat_pic, 375 - plat_pic.get_size()[0] // 2)
+        self.platform2 = Platform(plat_pic, 1125 - plat_pic.get_size()[0] // 2)
+
         self.cd = {0: pic('go.png', (600, 425), add=(300, 150)),
                    1: pic('one.png', (650, 400), add=(200, 200)),
                    2: pic('two.png', (650, 400), add=(200, 200)),
@@ -53,8 +75,9 @@ class Menu:
         screen.blit(*self.btn_exit)
         screen.blit(*self.btn_guide)
         screen.blit(*self.btn_wb)
-        screen.blit(self.platform, (375 - self.platform.get_size()[0] // 2, 500))
-        screen.blit(self.platform, (1125 - self.platform.get_size()[0] // 2, 500))
+        screen.blit(*self.btn_acc)
+        screen.blit(*self.logo_image)
+        PLATFORMS.draw(screen)
 
     def update(self, btn):
         if btn == self.btn_start1:
@@ -92,13 +115,21 @@ class Menu:
     def open_guide(self):
         guide()
 
+    def open_acc(self):
+        acc()
+
     def open_settings(self):
         global SOUND_LEVEL
         SOUND_LEVEL = settings(SOUND_LEVEL)
 
 
 def play():
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'chasm' + f'{i}.mp3' for i in range(1, 14)]))
+    global LAST
+    tr = random.choice(TRACKS)
+    while tr == LAST:
+        tr = random.choice(TRACKS)
+    LAST = tr
+    pygame.mixer.music.load(tr)
     pygame.mixer.music.play(1)
     pygame.mixer.music.set_volume(SOUND_LEVEL)
 
@@ -142,10 +173,13 @@ def main():
                     menu.open_shop()
                 if menu.btn_sett[1].collidepoint(*mouse):
                     menu.open_settings()
+                    print(1)
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
                 if menu.btn_wb[1].collidepoint(*mouse):
                     menu.open_wb()
+                if menu.btn_acc[1].collidepoint(*mouse):
+                    menu.open_acc()
                 if menu.btn_exit[1].collidepoint(*mouse):
                     RUNNING = False
                     break
