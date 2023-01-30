@@ -2,6 +2,7 @@ from funcs_backend import *
 import pygame
 from consts import *
 
+
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
@@ -96,6 +97,9 @@ def guide():
                     guide_w.back()
                     break
         guide_w.render(screen)
+        sound_level = float(
+            open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
+        check_busy(sound_level)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
         clock.tick(FPS)

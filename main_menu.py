@@ -14,8 +14,6 @@ pygame.mixer.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
-SOUND_LEVEL = 0.5
-LAST = ''
 PLATFORMS = pygame.sprite.Group()
 
 
@@ -119,19 +117,7 @@ class Menu:
         acc()
 
     def open_settings(self):
-        global SOUND_LEVEL
-        SOUND_LEVEL = settings(SOUND_LEVEL)
-
-
-def play():
-    global LAST
-    tr = random.choice(TRACKS)
-    while tr == LAST:
-        tr = random.choice(TRACKS)
-    LAST = tr
-    pygame.mixer.music.load(tr)
-    pygame.mixer.music.play(1)
-    pygame.mixer.music.set_volume(SOUND_LEVEL)
+        settings()
 
 
 def time_to_game(menu, timer):
@@ -173,7 +159,6 @@ def main():
                     menu.open_shop()
                 if menu.btn_sett[1].collidepoint(*mouse):
                     menu.open_settings()
-                    print(1)
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
                 if menu.btn_wb[1].collidepoint(*mouse):
@@ -188,11 +173,9 @@ def main():
                     menu.update(menu.btn_start1)
                 elif event.key == pygame.K_RSHIFT:
                     menu.update(menu.btn_start2)
-        if not pygame.mixer.music.get_busy():
-            play()
-        if pygame.mixer.music.get_volume() != SOUND_LEVEL:
-            pygame.mixer.music.set_volume(SOUND_LEVEL)
-
+        sound_level = float(
+            open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
+        check_busy(sound_level)
         timer = time_to_game(menu, timer)
         menu.render(screen)
         pygame.display.flip()
