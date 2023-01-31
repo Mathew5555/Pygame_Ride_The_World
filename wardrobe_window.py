@@ -141,8 +141,15 @@ def wb():
                     wardrobe.next()
                 if event.key == pygame.K_LEFT:
                     wardrobe.previous()
-                if event.key == pygame.K_BREAK:
+                if event.key == pygame.K_RETURN:
                     wardrobe.pick()
+                if event.key == pygame.K_1:
+                    wardrobe.curr_pl = 1
+                if event.key == pygame.K_2:
+                    wardrobe.curr_pl = 2
+                if event.key == pygame.K_ESCAPE:
+                    wardrobe.back()
+                    break
         wardrobe.render(screen)
         if wardrobe.curr_pl == 1:
             wardrobe.render1_wb()

@@ -93,6 +93,9 @@ def settings():
                     curr = setting.volume_box.plus(curr)
                 elif event.key == pygame.K_MINUS:
                     curr = setting.volume_box.minus(curr)
+                elif event.key == pygame.K_ESCAPE:
+                    setting.back()
+                    break
         setting.render(screen, curr)
         check_busy(curr)
         pygame.display.flip()

@@ -104,6 +104,10 @@ def info():
                 if info.btn_back[1].collidepoint(*mouse):
                     info.back()
                     break
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    info.back()
+                    break
         info.render(screen)
         sound_level = float(
             open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
