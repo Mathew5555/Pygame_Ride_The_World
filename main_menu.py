@@ -136,6 +136,7 @@ def time_to_game(menu, timer):
 def main():
     global RUNNING
     menu = Menu()
+    pygame.display.set_mode(WINDOW_SIZE)
     play()
     FON = split_animated_gif(IMAGES_DIR + 'fon.gif')[:]
     ind = 0

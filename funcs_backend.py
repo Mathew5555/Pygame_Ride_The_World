@@ -27,15 +27,39 @@ def load_image(name, colorkey=None):
     return image
 
 
-def split_animated_gif(gif_file_path):
+def split_animated_gif(gif_file_path, screen=None):
     ret = []
-    gif = Image.open(gif_file_path)
-    for frame_index in range(gif.n_frames):
-        gif.seek(frame_index)
-        frame_rgba = gif.convert("RGBA")
-        pygame_image = pygame.image.fromstring(frame_rgba.tobytes(), frame_rgba.size,
-                                               frame_rgba.mode)
-        ret.append(pygame.transform.scale(pygame_image, WINDOW_SIZE))
+    gifs = []
+    if gif_file_path == 'klee':
+        for i in range(1, 5):
+            gifs.append(Image.open(f'images/klee/{i}.gif'))
+        total = 0
+        all_len = sum([i.n_frames for i in gifs])
+        for gif in gifs:
+            for frame_index in range(gif.n_frames):
+                gif.seek(frame_index)
+                frame_rgba = gif.convert("RGBA")
+                pygame_image = pygame.image.fromstring(frame_rgba.tobytes(), frame_rgba.size,
+                                                       frame_rgba.mode)
+                ret.append(pygame.transform.scale(pygame_image, (1536, 864)))
+                screen.fill((0, 0, 0))
+                font = pygame.font.Font(FONT, 80)
+                s = str(round(total / all_len * 100, 1)) + '%'
+                text = font.render(f'Загружено:', True, (255, 255, 255))
+                for i in range(len(s)):
+                    text1 = font.render(s[i], True, (255, 255, 255))
+                    screen.blit(text1, (600 + i * 50, 100))
+                screen.blit(text, (100, 100))
+                pygame.display.flip()
+                total += 1
+    else:
+        gif = Image.open(gif_file_path)
+        for frame_index in range(gif.n_frames):
+            gif.seek(frame_index)
+            frame_rgba = gif.convert("RGBA")
+            pygame_image = pygame.image.fromstring(frame_rgba.tobytes(), frame_rgba.size,
+                                                   frame_rgba.mode)
+            ret.append(pygame.transform.scale(pygame_image, WINDOW_SIZE))
     return ret
 
 
