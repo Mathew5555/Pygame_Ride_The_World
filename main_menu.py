@@ -25,7 +25,7 @@ class Platform(pygame.sprite.Sprite):
         super().__init__(PLATFORMS)
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.update(x, 500, self.rect[2], self.rect[3])
+        self.rect.update(x, 700, self.rect[2], self.rect[3])
         self.mask = pygame.mask.from_surface(self.image)
 
         load_image(IMAGES_DIR + 'platform.png')
@@ -46,8 +46,8 @@ class Menu:
 
         self.logo_image = pic(logo, (600, 150), add=(300, 200))
 
-        self.btn_start1 = pic(start1, (300, 800))
-        self.btn_start2 = pic(start2, (1050, 800))
+        self.btn_start1 = pic(start1, (300, 900))
+        self.btn_start2 = pic(start2, (1050, 900))
         self.check_mark1 = pic(check, (-400, -400), add=(40, 40))
         self.check_mark2 = pic(check, (-400, -400), add=(40, 40))
         plat_pic = load_image(IMAGES_DIR + plat)
@@ -80,20 +80,20 @@ class Menu:
         if btn == self.btn_start1:
             x, y = self.check_mark1[1][0], self.check_mark1[1][1]
             if (x, y) == (-400, -400):
-                x, y = 460, 770
-                self.btn_start1 = pic('play2.png', (300, 800))
+                x, y = 460, 870
+                self.btn_start1 = pic('play2.png', (300, 900))
             else:
                 x, y = -400, -400
-                self.btn_start1 = pic('play1.png', (300, 800))
+                self.btn_start1 = pic('play1.png', (300, 900))
             self.check_mark1 = self.check_mark1[0], (x, y, 40, 40)
         elif btn == self.btn_start2:
             x, y = self.check_mark2[1][0], self.check_mark2[1][1]
             if (x, y) == (-400, -400):
-                x, y = 1210, 770
-                self.btn_start2 = pic('play2.png', (1050, 800))
+                x, y = 1210, 870
+                self.btn_start2 = pic('play2.png', (1050, 900))
             else:
                 x, y = -400, -400
-                self.btn_start2 = pic('play1.png', (1050, 800))
+                self.btn_start2 = pic('play1.png', (1050, 900))
             self.check_mark2 = self.check_mark2[0], (x, y, 40, 40)
 
     def both_checked(self):
