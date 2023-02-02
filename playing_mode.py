@@ -43,11 +43,11 @@ class Map:
                         continue
                     screen.blit(image, (x * self.tile_size, y * self.tile_size))
 
-    def get_tile_id(self, position):
-        return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
-
-    def is_free(self, position):
-        return self.get_tile_id(position) in self.free_tiles
+    # def get_tile_id(self, position):
+    #     return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
+    #
+    # def is_free(self, position):
+    #     return self.get_tile_id(position) in self.free_tiles
 
 
 class Hero(pygame.sprite.Sprite):
@@ -118,8 +118,11 @@ class Hero(pygame.sprite.Sprite):
                 self.image = self.right[self.cur_frame]
                 flag = 1
             self.direction = "right"
-        standing_on = get_tile_properties(map.map, self.rect.midbottom[0] + 5, self.rect.y + 50)
-        print(standing_on)
+        if self.direction == "right":
+            standing_on = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1])
+            print(standing_on)
+        else:
+            standing_on = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1])
         if keys[pygame.K_w]:
             if standing_on['solid'] == 1:
                 self.jump_frame = 20
