@@ -8,15 +8,21 @@ from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
 from PyQt5.QtWidgets import *
 
 
+id = 1 #сюда передается айди игрока
+
 FONT = 'data/font.ttf'
 
 def back_door():
     global running
     running = False
 
+def renew_db():
+    cur.execute(f"""
+                        INSERT INTO films(title, year, genre, duration) VALUES('{film}', '{int(year)}', '{newgenre}', '{int(duration)}')""")
 
-def new(spisok, text_spisok):
-    global item1, item2, item3, item4
+
+def new(spisok, text_spisok, cost, bought):
+    global buy1, buy2, buy3, buy4
     item1 = pygame.sprite.Sprite()
     item1.image = load_image(spisok[0])
     text1 = font.render(text_spisok[0], True, (255, 255, 255))
@@ -25,6 +31,18 @@ def new(spisok, text_spisok):
     itemsgrp.add(item1)
     item1.rect.x = 180
     item1.rect.y = 270
+    if not bought[0]:
+        buy1 = pygame.sprite.Sprite()
+        buy1.image = load_image("buy.png")
+        buy1.image = pygame.transform.scale(buy1.image, (200, 200))
+        buy1.rect = buy1.image.get_rect()
+        btns.add(buy1)
+        buy1.rect.x = 200
+        buy1.rect.y = 550
+
+    c = str(cost[0])
+    text_cost1 = font.render(c, True, (255, 255, 255))
+    screen.blit(text_cost1, (345, 215))
 
     item2 = pygame.sprite.Sprite()
     item2.image = load_image(spisok[1])
@@ -35,6 +53,19 @@ def new(spisok, text_spisok):
     item2.rect.x = 480
     item2.rect.y = 270
 
+    if not bought[1]:
+        buy2 = pygame.sprite.Sprite()
+        buy2.image = load_image("buy.png")
+        buy2.image = pygame.transform.scale(buy2.image, (200, 200))
+        buy2.rect = buy2.image.get_rect()
+        btns.add(buy2)
+        buy2.rect.x = 500
+        buy2.rect.y = 550
+
+    c = str(cost[1])
+    text_cost2 = font.render(c, True, (255, 255, 255))
+    screen.blit(text_cost2, (645, 215))
+
     item3 = pygame.sprite.Sprite()
     item3.image = load_image(spisok[2])
     text3 = font.render(text_spisok[2], True, (255, 255, 255))
@@ -44,6 +75,19 @@ def new(spisok, text_spisok):
     item3.rect.x = 780
     item3.rect.y = 270
 
+    if not bought[2]:
+        buy3 = pygame.sprite.Sprite()
+        buy3.image = load_image("buy.png")
+        buy3.image = pygame.transform.scale(buy3.image, (200, 200))
+        buy3.rect = buy3.image.get_rect()
+        btns.add(buy3)
+        buy3.rect.x = 800
+        buy3.rect.y = 550
+
+    c = str(cost[2])
+    text_cost3 = font.render(c, True, (255, 255, 255))
+    screen.blit(text_cost3, (945, 215))
+
     item4 = pygame.sprite.Sprite()
     item4.image = load_image(spisok[3])
     text4 = font.render(text_spisok[3], True, (255, 255, 255))
@@ -52,6 +96,19 @@ def new(spisok, text_spisok):
     itemsgrp.add(item4)
     item4.rect.x = 1080
     item4.rect.y = 270
+
+    if not bought[3]:
+        buy4 = pygame.sprite.Sprite()
+        buy4.image = load_image("buy.png")
+        buy4.image = pygame.transform.scale(buy4.image, (200, 200))
+        buy4.rect = buy4.image.get_rect()
+        btns.add(buy4)
+        buy4.rect.x = 1100
+        buy4.rect.y = 550
+
+    c = str(cost[3])
+    text_cost4 = font.render(c, True, (255, 255, 255))
+    screen.blit(text_cost4, (1245, 215))
 
     screen.blit(text1, (180, 570))
     screen.blit(text2, (480, 570))
@@ -135,6 +192,7 @@ for i in range(4):
     money.rect.x = 380 + 300*i
     money.rect.y = 220
 
+
 back = pygame.sprite.Sprite()
 back.image = load_image("back.png")
 back.image = pygame.transform.scale(back.image, (200, 100))
@@ -152,15 +210,43 @@ text_skins = ['sheep1','sheep2','sheep3','sheep4']
 
 con = sqlite3.connect('account_info.db')
 cur = con.cursor()
-costs = cur.execute(
-    '''SELECT id,cost FROM shop''').fetchall()
+cost_b = cur.execute(
+    '''SELECT cost FROM boosts''').fetchall()
+cost_s = cur.execute(
+    '''SELECT cost FROM skins''').fetchall()
+cost_boosts = []
+cost_skins = []
+bought_boosts_res = ''
+bought_skins_res = ''
+players_money = ''
+for el in cost_b:
+    if el[0]:
+        cost_boosts.append(el[0])
+for el in cost_s:
+    if el[0]:
+        cost_skins.append(el[0])
+bought_boosts = cur.execute(
+    f'''SELECT boosts FROM info where id = {id}''').fetchall()
+for el in bought_boosts:
+    if el[0]:
+        bought_boosts_res = bought_boosts_res + (el[0])
+bought_skins = cur.execute(
+    f'''SELECT skins FROM info where id = {id}''').fetchall()
+for el in bought_skins:
+    if el[0]:
+        bought_skins_res = bought_skins_res + (el[0])
+players_m = cur.execute(
+    f'''SELECT coins FROM info where id = {id}''').fetchall()
+for el in players_m:
+    if el[0]:
+        players_money = int(el[0])
+players_money = int(players_money)
+bought_skins_res = list(map(int, bought_skins_res.split(', ')))
+bought_boosts_res = list(map(int, bought_boosts_res.split(', ')))
 
-cost_skins = ['4', '5', '5', '2']
-cost_boosts = ['2', '2', '3', '4', '1', '1']
 
 
-players_money = cur.execute(
-    '''SELECT coins FROM info where id = 1''').fetchall()
+
 
 
 
@@ -172,8 +258,9 @@ pygame.display.flip()
 running = True
 mainlist = []
 mainlist1 = []
-maincost = []
-new(skins_photo, text_skins)
+maincost = cost_skins
+main_bought = bought_skins_res
+new(skins_photo, text_skins, cost_skins, bought_skins_res)
 mainlist = skins_photo
 maintext = text_skins
 while running:
@@ -192,7 +279,8 @@ while running:
                 mainlist1 = mainlist1[-1:] + mainlist1[:-1]
                 maintext = maintext[-1:] + maintext[:-1]
                 maincost = maincost[-1:] + maincost[:-1]
-                new(mainlist, maintext)
+                main_bought = main_bought[-1:] + main_bought[:-1]
+                new(mainlist, maintext, maincost, main_bought)
                 pygame.display.flip()
             if left.rect.collidepoint(x, y):
                 clear()
@@ -201,44 +289,53 @@ while running:
                 mainlist1 = mainlist1[1:] + mainlist1[:1]
                 maintext = maintext[1:] + maintext[:1]
                 maincost = maincost[1:] + maincost[:1]
-
-                new(mainlist, maintext)
+                main_bought = main_bought[1:] + main_bought[:1]
+                new(mainlist, maintext, maincost, main_bought)
                 pygame.display.flip()
             if boosts.rect.collidepoint(x, y):
                 clear()
                 screen.blit(bg, (0, 0))
-                new(boosts_photo, text_boosts)
+                new(boosts_photo, text_boosts, cost_boosts, bought_boosts_res)
                 mainlist = boosts_photo
                 mainlist1 = boosts_items
                 maintext = text_boosts
                 maincost = cost_boosts
+                main_bought = bought_boosts_res
                 pygame.display.flip()
             if skins.rect.collidepoint(x, y):
                 clear()
                 screen.blit(bg, (0, 0))
 
-                new(skins_photo, text_skins)
+                new(skins_photo, text_skins, cost_skins, bought_skins_res)
                 mainlist = skins_photo
                 mainlist1 = skins_items
                 maintext = text_skins
-                cost_skins = cost_skins
+                maincost = cost_skins
+                main_bought = bought_skins_res
                 pygame.display.flip()
             if back.rect.collidepoint(x, y):
                 back_door()
-            if item1.rect.collidepoint(x, y):
-                if players_money >= mainlist1[0]:
-                    players_money = players_money - mainlist1[0]
-                #else:
-                    #pass
-            if item2.rect.collidepoint(x, y):
-                if players_money >= mainlist1[1]:
-                    players_money = players_money - mainlist1[1]
-            if item3.rect.collidepoint(x, y):
-                if players_money >= mainlist1[2]:
-                    players_money = players_money - mainlist1[2]
-            if item4.rect.collidepoint(x, y):
-                if players_money >= mainlist1[3]:
-                    players_money = players_money - mainlist1[3]
+            if buy1.rect.collidepoint(x, y):
+                if players_money >= maincost[0]:
+                    players_money = players_money - maincost[0]
+                    maincost[0] = 1
+                    cur.execute(f"""INSERT INTO films(title, year, genre, duration) VALUES('{film}', '{int(year)}', '{newgenre}', '{int(duration)}')""")
+                    renew_db()
+
+            if buy2.rect.collidepoint(x, y):
+                if players_money >= maincost[1]:
+                    players_money = players_money - maincost[1]
+                    maincost[1] = 1
+
+            if buy3.rect.collidepoint(x, y):
+                if players_money >= maincost[2]:
+                    players_money = players_money - maincost[2]
+                    maincost[2] = 1
+
+            if buy4.rect.collidepoint(x, y):
+                if players_money >= maincost[3]:
+                    players_money = players_money - maincost[3]
+                    maincost[3] = 1
 
 
 
