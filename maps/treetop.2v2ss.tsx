@@ -7,6 +7,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="1">
@@ -15,6 +16,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="2">
@@ -23,6 +25,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="3">
@@ -31,6 +34,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="4">
@@ -39,6 +43,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="5">
@@ -47,6 +52,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="6">
@@ -55,6 +61,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="7">
@@ -63,6 +70,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="8">
@@ -71,6 +79,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="9">
@@ -79,6 +88,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="10">
@@ -87,6 +97,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="11">
@@ -95,6 +106,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="12">
@@ -103,6 +115,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="13">
@@ -111,6 +124,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="14">
@@ -119,6 +133,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="15">
@@ -127,6 +142,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="16">
@@ -135,6 +151,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="17">
@@ -143,6 +160,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="18">
@@ -151,6 +169,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="19">
@@ -159,6 +178,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="20">
@@ -167,6 +187,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="21">
@@ -175,6 +196,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="22">
@@ -183,6 +205,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="23">
@@ -191,6 +214,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="24">
@@ -199,6 +223,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="25">
@@ -207,6 +232,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="26">
@@ -215,6 +241,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="27">
@@ -223,6 +250,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="28">
@@ -231,6 +259,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="29">
@@ -239,6 +268,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="30">
@@ -247,6 +277,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="31">
@@ -255,6 +286,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="32">
@@ -263,6 +295,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="33">
@@ -271,6 +304,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="34">
@@ -279,6 +313,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="35">
@@ -287,6 +322,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="36">
@@ -295,6 +331,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="37">
@@ -303,6 +340,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="38">
@@ -311,6 +349,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="39">
@@ -319,6 +358,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="40">
@@ -327,6 +367,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="41">
@@ -335,6 +376,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="42">
@@ -343,6 +385,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="43">
@@ -351,6 +394,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="44">
@@ -359,6 +403,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="45">
@@ -367,6 +412,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="46">
@@ -375,6 +421,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="47">
@@ -383,6 +430,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="48">
@@ -391,6 +439,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="49">
@@ -399,6 +448,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="50">
@@ -407,6 +457,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="51">
@@ -415,6 +466,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="52">
@@ -423,6 +475,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="53">
@@ -431,6 +484,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="54">
@@ -439,6 +493,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="55">
@@ -447,6 +502,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="56">
@@ -455,6 +511,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="57">
@@ -463,6 +520,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="58">
@@ -471,6 +529,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="59">
@@ -479,6 +538,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="60">
@@ -487,6 +547,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="61">
@@ -495,6 +556,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="62">
@@ -503,6 +565,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
  <tile id="63">
@@ -511,6 +574,7 @@
    <property name="fire" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
+   <property name="up_solid" type="int" value="0"/>
   </properties>
  </tile>
 </tileset>

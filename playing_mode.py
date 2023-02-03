@@ -20,9 +20,9 @@ def get_tile_properties(tmxdata, x, y):
     try:
         properties = tmxdata.get_tile_properties(tile_x, tile_y, 0)
     except ValueError:
-        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0}
+        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
     if properties is None:
-        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0}
+        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
     return properties
 
 
@@ -34,11 +34,11 @@ class Map:
         self.tile_size = self.map.tilewidth
         self.free_tiles = free_tiles
 
-    def render(self, screen):
-        for i in range(len(self.map.layers)):
+    def render(self, screen, *args):
+        for el in args:
             for y in range(self.height):
                 for x in range(self.width):
-                    image = self.map.get_tile_image(x, y, i)
+                    image = self.map.get_tile_image(x, y, el - 1)
                     if image is None:
                         continue
                     screen.blit(image, (x * self.tile_size, y * self.tile_size))
@@ -58,18 +58,19 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.sheet()
         self.image = self.stand_r
-        self.rect = pygame.Rect(0, 0, 40, 50)
+        self.rect = pygame.Rect(0, 0, 28, 40)
         self.jump_frame = 0
+        self.fly = 0
 
     def sheet(self):
         self.stand_r = pygame.transform.scale(
-            pygame.image.load(f"Base pack/Player/p{self.id}_stand.png").convert_alpha(), (40, 50))
+            pygame.image.load(f"Base pack/Player/p{self.id}_stand.png").convert_alpha(), (28, 40))
         self.stand_l = pygame.transform.flip(self.stand_r, True, False)
         self.jump_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_jump.png").convert_alpha(),
-                                             (40, 50))
+                                             (28, 40))
         self.jump_l = pygame.transform.flip(self.jump_r, True, False)
         self.land_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_hurt.png").convert_alpha(),
-                                             (40, 50))
+                                             (28, 40))
         self.land_l = pygame.transform.flip(self.land_r, True, False)
         right = [
             pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk01.png").convert_alpha(),
@@ -84,7 +85,7 @@ class Hero(pygame.sprite.Sprite):
             pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk10.png").convert_alpha(),
             pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk11.png").convert_alpha(),
         ]
-        self.right = [pygame.transform.scale(image, (40, 50)) for image in right]
+        self.right = [pygame.transform.scale(image, (28, 40)) for image in right]
         self.left = [pygame.transform.flip(image, True, False) for image in self.right]
 
     # def update_check(self):
@@ -103,7 +104,7 @@ class Hero(pygame.sprite.Sprite):
     def update(self, keys, map):
         flag = 0
         if keys[pygame.K_a]:
-            left_tile = get_tile_properties(map.map, self.rect.x - 3, self.rect.y + 26)
+            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5)
             if left_tile['solid'] == 0:
                 self.rect.x -= 3
                 self.cur_frame = (self.cur_frame + 1) % len(self.left)
@@ -111,7 +112,7 @@ class Hero(pygame.sprite.Sprite):
                 flag = 1
             self.direction = "left"
         if keys[pygame.K_d]:
-            right_tile = get_tile_properties(map.map, self.rect.x + 40 + 4, self.rect.y + 25)
+            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5)
             if right_tile['solid'] == 0:
                 self.rect.x += 3
                 self.cur_frame = (self.cur_frame + 1) % len(self.right)
@@ -120,39 +121,34 @@ class Hero(pygame.sprite.Sprite):
             self.direction = "right"
         if self.direction == "right":
             standing_on = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1])
-            print(standing_on)
+            standing_on2 = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1])
         else:
             standing_on = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1])
+            standing_on2 = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1])
         if keys[pygame.K_w]:
-            if standing_on['solid'] == 1:
+            if standing_on['solid'] + standing_on2['solid'] >= 1:
                 self.jump_frame = 20
                 flag = 1
                 if self.direction == "left":
                     self.image = self.jump_l
                 else:
                     self.image = self.jump_r
-            # self.rect.y -= 3
-        # if keys[pygame.K_s]:
-        #     self.rect.y += 3
-        #     flag = 1
-        #     if self.direction == "left":
-        #         self.image = self.land_l
-        #     else:
-        #         self.image = self.land_r
         if not flag:
             if self.direction == "left":
                 self.image = self.stand_l
             else:
                 self.image = self.stand_r
         if self.jump_frame > 0:
-            above_tile = get_tile_properties(map.map, self.rect.x + 20, self.rect.y - 6)
-            if above_tile['solid'] == 0:
+            above_tile = get_tile_properties(map.map, self.rect.topleft[0], self.rect.topleft[1])
+            above_tile2 = get_tile_properties(map.map, self.rect.topright[0], self.rect.topright[1])
+            if above_tile['up_solid'] + above_tile2['up_solid'] == 0:
                 self.rect.y = self.rect.y - 6
                 self.jump_frame -= 1
             else:
                 self.jump_frame = 0
-        elif standing_on['solid'] == 0:
-            self.rect.y = self.rect.y + 6
+        else:
+            if standing_on2['solid'] + standing_on['solid'] == 0:
+                self.rect.y = self.rect.y + 6
 
 
 class Game:
@@ -163,9 +159,10 @@ class Game:
         # self.hero2 = hero2
 
     def render(self, screen, args):
-        self.map.render(screen)
+        self.map.render(screen, 1, 3)
         self.update_hero(args)
         self.hero1.render(screen)
+        self.map.render(screen, 2)
         # self.hero2.render(screen)
 
     def update_hero(self, args):
@@ -208,7 +205,6 @@ def main():
     map = Map("map2.tmx", [])
     hero1 = Hero(1)
     game = Game(map, hero1)
-    # hero1 = Hero("blue")
     # hero2 = Hero("red")
     # game = Game(map, hero1, hero2)
 
@@ -227,13 +223,6 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        # standing_on = get_tile_properties(tmxdata, x + 12, y + 35)
-        # if keys[ord("w")]:
-        #     if standing_on['solid'] == 1:
-        #         player_jump_frame = 20
-        # if keys[ord("s")]:
-        #     pass  # Do nothing
         screen.blit(fon, (0, 0))
         game.render(screen, keys)
         clock.tick(FPS)
