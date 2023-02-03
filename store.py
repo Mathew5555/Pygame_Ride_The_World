@@ -319,7 +319,6 @@ while running:
                 if players_money >= maincost[0]:
                     players_money = players_money - maincost[0]
                     maincost[0] = 1
-                    cur.execute(f"""INSERT INTO films(title, year, genre, duration) VALUES('{film}', '{int(year)}', '{newgenre}', '{int(duration)}')""")
                     renew_db()
 
             if buy2.rect.collidepoint(x, y):
