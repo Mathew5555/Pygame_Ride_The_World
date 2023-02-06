@@ -64,6 +64,7 @@ class Hero(pygame.sprite.Sprite):
         self.fly = 0
         self.climb = False
         self.flag2 = 0
+        self.health = 100
 
     def sheet(self):
         self.stand_r = pygame.transform.scale(
@@ -120,6 +121,9 @@ class Hero(pygame.sprite.Sprite):
             standing_on = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
             standing_on2 = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
         ladder_check = get_tile_properties(map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
+        damage_check = get_tile_properties(map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 1)
+        if damage_check["kill"] == 1:
+            print("die")
         if keys[pygame.K_w]:
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
