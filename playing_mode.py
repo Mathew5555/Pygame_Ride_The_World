@@ -11,8 +11,9 @@ FPS = 60
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
 MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
 all_sprites = pygame.sprite.Group()
-player1_sprite = pygame.sprite.Group()
+player_sprite = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
+bullet_group = pygame.sprite.Group()
 
 
 def get_tile_properties(tmxdata, x, y, layer):
@@ -43,17 +44,20 @@ class Map:
                     if image is None:
                         continue
                     screen.blit(image, (x * self.tile_size, y * self.tile_size))
+                    Tile(x, y, self.tile_size, image)
 
-    # def get_tile_id(self, position):
-    #     return self.map.tiledgidmap[self.map.get_tile_gid(*position, 0)]
-    #
-    # def is_free(self, position):
-    #     return self.get_tile_id(position) in self.free_tiles
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y, tile_size, image):
+        super().__init__(tiles_group, all_sprites)
+        self.image = image
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect().move(tile_size * pos_x, tile_size * pos_y)
 
 
 class Hero(pygame.sprite.Sprite):
     def __init__(self, id):
-        super().__init__(all_sprites)
+        super().__init__(player_sprite, all_sprites)
         self.id = id
         self.direction = "right"
         self.cur_frame = 0
@@ -92,11 +96,12 @@ class Hero(pygame.sprite.Sprite):
         self.right = [pygame.transform.scale(image, (28, 40)) for image in right]
         self.left = [pygame.transform.flip(image, True, False) for image in self.right]
 
-
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def update(self, keys, map):
+        if keys[pygame.K_e]:
+            self.shoot()
         flag = 0
         if keys[pygame.K_a]:
             left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
@@ -160,6 +165,41 @@ class Hero(pygame.sprite.Sprite):
                 if standing_on2['solid'] + standing_on['solid'] == 0:
                     self.rect.y = self.rect.y + 6
 
+    def shoot(self):
+        if self.direction == "left":
+            bullet = Bullet(self.rect.x - 30, self.rect.y + 20, self.direction)
+        else:
+            bullet = Bullet(self.rect.x + 30, self.rect.y + 20, self.direction)
+        bullet_group.add(bullet)
+
+
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y, direction):
+        pygame.sprite.Sprite.__init__(self)
+        self.speed = 30
+        self.image = pygame.transform.scale(
+            pygame.image.load("images/bullet.png").convert_alpha(), (25, 15))
+        self.rect = self.image.get_rect().move(x, y)
+        self.direction = direction
+
+    def render(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def update(self):
+        if self.direction == "left":
+            self.rect.x -= self.speed
+        else:
+            self.rect.x += self.speed
+        if self.rect.right < 0 or self.rect.left > WINDOW_WIDTH:
+            self.kill()
+        # for tile in tiles_group:
+        #     print(2)
+        #     if pygame.sprite.collide_mask(self, tile):
+        #         self.kill()
+        for player in player_sprite:
+            if pygame.sprite.collide_mask(self, player):
+                self.kill()
+
 
 class Game:
     def __init__(self, map, hero1):
@@ -173,11 +213,14 @@ class Game:
         self.update_hero(args)
         self.hero1.render(screen)
         self.map.render(screen, 2)
+        for bullet in bullet_group:
+            bullet.render(screen)
         # self.hero2.render(screen)
 
     def update_hero(self, args):
         # all_sprites.draw(self.screen)
         self.hero1.update(args, self.map)
+        bullet_group.update()
         # all_sprites.update(keys)
 
     def check_win(self):
