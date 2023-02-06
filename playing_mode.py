@@ -178,24 +178,26 @@ class Bullet(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 30
         self.image = pygame.transform.scale(
-            pygame.image.load("images/bullet.png").convert_alpha(), (25, 15))
+            pygame.image.load("images/bullet.png").convert_alpha(), (25, 25))
         self.rect = self.image.get_rect().move(x, y)
         self.direction = direction
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def update(self):
+    def update(self, map):
         if self.direction == "left":
+            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
+            if left_tile["solid"]:
+                self.kill()
             self.rect.x -= self.speed
         else:
+            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
+            if right_tile["solid"]:
+                self.kill()
             self.rect.x += self.speed
-        if self.rect.right < 0 or self.rect.left > WINDOW_WIDTH:
+        if self.rect.left < 0 or self.rect.right > WINDOW_WIDTH:
             self.kill()
-        # for tile in tiles_group:
-        #     print(2)
-        #     if pygame.sprite.collide_mask(self, tile):
-        #         self.kill()
         for player in player_sprite:
             if pygame.sprite.collide_mask(self, player):
                 self.kill()
@@ -220,7 +222,7 @@ class Game:
     def update_hero(self, args):
         # all_sprites.draw(self.screen)
         self.hero1.update(args, self.map)
-        bullet_group.update()
+        bullet_group.update(self.map)
         # all_sprites.update(keys)
 
     def check_win(self):
