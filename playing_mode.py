@@ -14,13 +14,14 @@ all_sprites = pygame.sprite.Group()
 player_sprite = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
+gun_group = pygame.sprite.Group()
 
 
-def get_tile_properties(tmxdata, x, y, layer):
+def get_tile_properties(tmx_data, x, y, layer):
     tile_x = x // 32
     tile_y = y // 32
     try:
-        properties = tmxdata.get_tile_properties(tile_x, tile_y, layer)
+        properties = tmx_data.get_tile_properties(tile_x, tile_y, layer)
     except ValueError:
         properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
     if properties is None:
@@ -56,79 +57,91 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, id):
+    def __init__(self, player_id):
         super().__init__(player_sprite, all_sprites)
-        self.id = id
+        self.player_id = player_id
+
+        self.speed_x = 3
+        self.speed_y = 6
         self.direction = "right"
-        self.cur_frame = 0
-        self.sheet()
-        self.image = self.stand_r
-        self.rect = pygame.Rect(0, 0, 28, 40)
-        self.jump_frame = 0
         self.fly = 0
         self.climb = False
-        self.flag2 = 0
+
+        self.cur_frame = 0
+        self.jump_frame = 0
+
+        self.rect = pygame.Rect(0, 0, 28, 40)
+
+        self.climb_flag = 0
         self.health = 100
+        self.shoot_cooldown = 0
+
+        self.sheet()
+        self.image = self.stand_r
+
+        self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
+        gun_group.add(self.gun)
 
     def sheet(self):
-        self.stand_r = pygame.transform.scale(
-            pygame.image.load(f"Base pack/Player/p{self.id}_stand.png").convert_alpha(), (28, 40))
+        self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
+                                              (self.rect.width, self.rect.height))
         self.stand_l = pygame.transform.flip(self.stand_r, True, False)
-        self.jump_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_jump.png").convert_alpha(),
-                                             (28, 40))
+
+        self.jump_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_jump.png"),
+                                             (self.rect.width, self.rect.height))
         self.jump_l = pygame.transform.flip(self.jump_r, True, False)
-        self.land_r = pygame.transform.scale(pygame.image.load(f"Base pack/Player/p{self.id}_hurt.png").convert_alpha(),
-                                             (28, 40))
+
+        self.land_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_hurt.png"),
+                                             (self.rect.width, self.rect.height))
         self.land_l = pygame.transform.flip(self.land_r, True, False)
+
         right = [
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk01.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk02.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk03.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk04.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk05.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk06.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk07.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk08.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk09.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk10.png").convert_alpha(),
-            pygame.image.load(f"Base pack/Player/p{self.id}_walk/PNG/p{self.id}_walk11.png").convert_alpha(),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk01.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk02.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk03.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk04.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk05.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk06.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk07.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk08.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk09.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk10.png"),
+            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk11.png")
         ]
-        self.right = [pygame.transform.scale(image, (28, 40)) for image in right]
+
+        self.right = [pygame.transform.scale(image, (self.rect.width, self.rect.height)) for image in right]
         self.left = [pygame.transform.flip(image, True, False) for image in self.right]
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def update(self, keys, map):
-        if keys[pygame.K_e]:
-            self.shoot()
+    def move(self, keys, game_map):
         flag = 0
         if keys[pygame.K_a]:
-            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
+            left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
             if left_tile['solid'] == 0:
-                self.rect.x -= 3
+                self.rect.x -= self.speed_x
+                self.gun.update(-self.speed_x, 0)
                 self.cur_frame = (self.cur_frame + 1) % len(self.left)
                 self.image = self.left[self.cur_frame]
                 flag = 1
             self.direction = "left"
         if keys[pygame.K_d]:
-            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
+            right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
             if right_tile['solid'] == 0:
-                self.rect.x += 3
+                self.rect.x += self.speed_x
+                self.gun.update(self.speed_x, 0)
                 self.cur_frame = (self.cur_frame + 1) % len(self.right)
                 self.image = self.right[self.cur_frame]
                 flag = 1
             self.direction = "right"
         if self.direction == "right":
-            standing_on = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
-            standing_on2 = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
         else:
-            standing_on = get_tile_properties(map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
-            standing_on2 = get_tile_properties(map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
-        ladder_check = get_tile_properties(map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
-        damage_check = get_tile_properties(map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 1)
-        if damage_check["kill"] == 1:
-            print("die")
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
+        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
         if keys[pygame.K_w]:
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
@@ -146,39 +159,53 @@ class Hero(pygame.sprite.Sprite):
                 self.image = self.stand_r
         if self.climb:
             self.jump_frame = 0
-            self.rect.y -= 6
-            self.flag2 = 10
+            self.rect.y -= self.speed_y
+            self.gun.update(0, -self.speed_y)
+            self.climb_flag = 10
             self.climb = False
         else:
-            if self.flag2:
+            if self.climb_flag:
                 self.jump_frame = 0
-                self.flag2 -= 1
+                self.climb_flag -= 1
             if self.jump_frame > 0:
-                above_tile = get_tile_properties(map.map, self.rect.topleft[0], self.rect.topleft[1], 0)
-                above_tile2 = get_tile_properties(map.map, self.rect.topright[0], self.rect.topright[1], 0)
+                above_tile = get_tile_properties(game_map.map, self.rect.topleft[0], self.rect.topleft[1], 0)
+                above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0], self.rect.topright[1], 0)
                 if above_tile['up_solid'] + above_tile2['up_solid'] == 0:
-                    self.rect.y = self.rect.y - 6
+                    self.rect.y = self.rect.y - self.speed_y
+                    self.gun.update(0, -self.speed_y)
                     self.jump_frame -= 1
                 else:
                     self.jump_frame = 0
             else:
                 if standing_on2['solid'] + standing_on['solid'] == 0:
-                    self.rect.y = self.rect.y + 6
+                    self.rect.y = self.rect.y + self.speed_y
+                    self.gun.update(0, self.speed_y)
+
+    def update(self, keys, game_map):
+        if self.shoot_cooldown > 0:
+            self.shoot_cooldown -= 1
+        if keys[pygame.K_e]:
+            self.shoot()
+        self.move(keys, game_map)
+        damage_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 1)
+        if damage_check["kill"] == 1:
+            print("die")
 
     def shoot(self):
-        if self.direction == "left":
-            bullet = Bullet(self.rect.x - 30, self.rect.y + 20, self.direction)
-        else:
-            bullet = Bullet(self.rect.x + 30, self.rect.y + 20, self.direction)
-        bullet_group.add(bullet)
+        if self.shoot_cooldown == 0:
+            self.shoot_cooldown = 30
+            if self.direction == "left":
+                bullet = Bullet(self.rect.x - self.rect.width // 2, self.rect.y + self.rect.height // 2, self.direction)
+            else:
+                bullet = Bullet(self.rect.x + self.rect.width // 4, self.rect.y + self.rect.height // 2, self.direction)
+            bullet_group.add(bullet)
 
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, direction):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 30
-        self.image = pygame.transform.scale(
-            pygame.image.load("images/bullet.png").convert_alpha(), (25, 25))
+        self.image = pygame.transform.scale(load_image("images/bullet1.png"), (40, 10))
         self.rect = self.image.get_rect().move(x, y)
         self.direction = direction
 
@@ -203,6 +230,30 @@ class Bullet(pygame.sprite.Sprite):
                 self.kill()
 
 
+class Gun(pygame.sprite.Sprite):
+    def __init__(self, x, y, direction, player_width):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(load_image("images/gun.png", -1), (30, 20))
+        self.left_move = pygame.transform.flip(self.image, True, False)
+        self.right_move = self.image
+        self.rect = self.image.get_rect().move(x, y)
+        self.direction = direction
+        self.player_width = player_width
+
+    def render(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def update(self, x, y):
+        if x > 0:
+            self.image = self.right_move
+            self.rect.x += self.player_width // 5
+        elif x < 0:
+            self.image = self.left_move
+            self.rect.x -= self.player_width // 5
+        self.rect.x += x
+        self.rect.y += y
+
+
 class Game:
     def __init__(self, map, hero1):
         self.map = map
@@ -214,6 +265,8 @@ class Game:
         self.map.render(screen, 1, 3)
         self.update_hero(args)
         self.hero1.render(screen)
+        for gun in gun_group:
+            gun.render(screen)
         self.map.render(screen, 2)
         for bullet in bullet_group:
             bullet.render(screen)
@@ -232,13 +285,7 @@ class Game:
         pass
 
 
-# Сообщение о победе какого-либо игрока с подсчетом очков
-def show_message(screen, message):
-    pass
-
-
 def load_image(name, colorkey=None):
-    # если файл не существует, то выходим
     if not os.path.isfile(name):
         print(f"Файл с изображением '{name}' не найден")
         sys.exit()
