@@ -11,10 +11,11 @@ FPS = 60
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
 MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
 all_sprites = pygame.sprite.Group()
-player_sprite = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 gun_group = pygame.sprite.Group()
+health_group = pygame.sprite.Group()
 
 
 def get_tile_properties(tmx_data, x, y, layer):
@@ -58,7 +59,7 @@ class Tile(pygame.sprite.Sprite):
 
 class Hero(pygame.sprite.Sprite):
     def __init__(self, player_id):
-        super().__init__(player_sprite, all_sprites)
+        super().__init__(player_group, all_sprites)
         self.player_id = player_id
 
         self.speed_x = 3
@@ -70,7 +71,7 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.jump_frame = 0
 
-        self.rect = pygame.Rect(0, 0, 28, 40)
+        self.rect = pygame.Rect(0, 20, 28, 40)
 
         self.climb_flag = 0
         self.health = 100
@@ -81,6 +82,9 @@ class Hero(pygame.sprite.Sprite):
 
         self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
         gun_group.add(self.gun)
+
+        health_bar = HealthBar(0, 2, self.health, self.health)
+        health_group.add(health_bar)
 
     def sheet(self):
         self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
@@ -121,7 +125,10 @@ class Hero(pygame.sprite.Sprite):
             left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
             if left_tile['solid'] == 0:
                 self.rect.x -= self.speed_x
-                self.gun.update(-self.speed_x, 0)
+                if self.direction == "right":
+                    self.gun.update(-self.speed_x, 0, flag=1)
+                else:
+                    self.gun.update(-self.speed_x, 0)
                 self.cur_frame = (self.cur_frame + 1) % len(self.left)
                 self.image = self.left[self.cur_frame]
                 flag = 1
@@ -130,7 +137,10 @@ class Hero(pygame.sprite.Sprite):
             right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
             if right_tile['solid'] == 0:
                 self.rect.x += self.speed_x
-                self.gun.update(self.speed_x, 0)
+                if self.direction == "left":
+                    self.gun.update(self.speed_x, 0, flag=-1)
+                else:
+                    self.gun.update(self.speed_x, 0)
                 self.cur_frame = (self.cur_frame + 1) % len(self.right)
                 self.image = self.right[self.cur_frame]
                 flag = 1
@@ -225,7 +235,7 @@ class Bullet(pygame.sprite.Sprite):
             self.rect.x += self.speed
         if self.rect.left < 0 or self.rect.right > WINDOW_WIDTH:
             self.kill()
-        for player in player_sprite:
+        for player in player_group:
             if pygame.sprite.collide_mask(self, player):
                 self.kill()
 
@@ -243,15 +253,31 @@ class Gun(pygame.sprite.Sprite):
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def update(self, x, y):
-        if x > 0:
+    def update(self, x, y, flag=0):
+        if flag < 0:
             self.image = self.right_move
-            self.rect.x += self.player_width // 5
-        elif x < 0:
+            self.rect.x += self.player_width
+        elif flag > 0:
             self.image = self.left_move
-            self.rect.x -= self.player_width // 5
+            self.rect.x -= self.player_width
         self.rect.x += x
         self.rect.y += y
+
+
+class HealthBar(pygame.sprite.Sprite):
+    def __init__(self, x, y, health, max_health):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.health = health
+        self.max_health = max_health
+
+    def draw(self, health, screen):
+        self.health = health
+        ratio = self.health / self.max_health
+        pygame.draw.rect(screen, pygame.Color("black"), (self.x - 2, self.y - 2, 150, 20))
+        pygame.draw.rect(screen, pygame.Color("red"), (self.x, self.y, 146, 16))
+        pygame.draw.rect(screen, pygame.Color("green"), (self.x, self.y, 146 * ratio, 16))
 
 
 class Game:
@@ -270,6 +296,8 @@ class Game:
         self.map.render(screen, 2)
         for bullet in bullet_group:
             bullet.render(screen)
+        for health in health_group:
+            health.draw(10, screen)
         # self.hero2.render(screen)
 
     def update_hero(self, args):
@@ -308,14 +336,12 @@ def main():
     hero1 = Hero(1)
     game = Game(map, hero1)
     # hero2 = Hero("red")
-    # game = Game(map, hero1, hero2)
 
     clock = pygame.time.Clock()
 
     running = True
     game_over = False
-    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back1.jpeg'),
-                                 (MAP_WIDTH, MAP_HEIGHT))
+    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back1.jpeg'), (MAP_WIDTH, MAP_HEIGHT))
     pygame.mixer.init()
     pygame.mixer.music.load(random.choice([MUSIC_DIR + 'inazuma' + f'{i}.mp3' for i in range(1, 6)]))
     pygame.mixer.music.play(999)
