@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="lava.IyYsS" tilewidth="32" tileheight="32" tilecount="1" columns="1">
+<tileset version="1.9" tiledversion="1.9.2" name="photo_2023-01-30_13-34-39.IyYsS" tilewidth="32" tileheight="16" tilecount="1" columns="1">
  <image source="../for_maps/photo_2023-01-30_13-34-39.IyYsS.jpg" width="32" height="16"/>
  <tile id="0">
   <properties>

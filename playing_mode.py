@@ -23,7 +23,7 @@ def get_tile_properties(tmx_data, x, y, layer):
     tile_y = y // 32
     try:
         properties = tmx_data.get_tile_properties(tile_x, tile_y, layer)
-    except ValueError:
+    except:
         properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
     if properties is None:
         properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
@@ -45,7 +45,10 @@ class Map:
                     image = self.map.get_tile_image(x, y, el - 1)
                     if image is None:
                         continue
-                    screen.blit(image, (x * self.tile_size, y * self.tile_size))
+                    if el == 2:
+                        screen.blit(image, (x * self.tile_size, y * self.tile_size + 16))
+                    else:
+                        screen.blit(image, (x * self.tile_size, y * self.tile_size))
                     Tile(x, y, self.tile_size, image)
 
 
@@ -58,35 +61,45 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id):
+    def __init__(self, player_id, x, y):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
 
         self.speed_x = 3
         self.speed_y = 6
-        self.direction = "right"
         self.fly = 0
         self.climb = False
 
         self.cur_frame = 0
         self.jump_frame = 0
 
-        self.rect = pygame.Rect(0, 20, 28, 40)
+        self.rect = pygame.Rect(x, y, 28, 40)
 
         self.climb_flag = 0
         self.health = 100
         self.shoot_cooldown = 0
+        self.fire_flag = 0
+        self.fire = 20
+        self.die_flag = 0
 
         self.sheet()
-        self.image = self.stand_r
+        if self.player_id == 1:
+            self.direction = "right"
+            self.image = self.stand_r
+            self.health_bar = HealthBar(0, 2, self.health, self.health)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
+        else:
+            self.direction = "left"
+            self.image = self.stand_l
+            self.health_bar = HealthBar(1450, 2, self.health, self.health)
+            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width)
 
-        self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
+        health_group.add(self.health_bar)
         gun_group.add(self.gun)
 
-        health_bar = HealthBar(0, 2, self.health, self.health)
-        health_group.add(health_bar)
-
     def sheet(self):
+        self.dead_image = pygame.transform.scale(load_image(f"images/ghost.png"),
+                                                 (self.rect.width, self.rect.height))
         self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
                                               (self.rect.width, self.rect.height))
         self.stand_l = pygame.transform.flip(self.stand_r, True, False)
@@ -121,8 +134,9 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys, game_map):
         flag = 0
-        if keys[pygame.K_a]:
-            left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
+        if (self.player_id == 1 and keys[pygame.K_a]) or (self.player_id == 2 and keys[pygame.K_k]):
+            left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - self.speed_x,
+                                            self.rect.bottomleft[1] - 5, 0)
             if left_tile['solid'] == 0:
                 self.rect.x -= self.speed_x
                 if self.direction == "right":
@@ -132,9 +146,12 @@ class Hero(pygame.sprite.Sprite):
                 self.cur_frame = (self.cur_frame + 1) % len(self.left)
                 self.image = self.left[self.cur_frame]
                 flag = 1
+            elif self.direction == "right":
+                self.gun.update(0, 0, flag=1)
             self.direction = "left"
-        if keys[pygame.K_d]:
-            right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
+        if (self.player_id == 1 and keys[pygame.K_d]) or (self.player_id == 2 and keys[pygame.K_SEMICOLON]):
+            right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + self.speed_x,
+                                             self.rect.bottomright[1] - 5, 0)
             if right_tile['solid'] == 0:
                 self.rect.x += self.speed_x
                 if self.direction == "left":
@@ -144,15 +161,17 @@ class Hero(pygame.sprite.Sprite):
                 self.cur_frame = (self.cur_frame + 1) % len(self.right)
                 self.image = self.right[self.cur_frame]
                 flag = 1
+            elif self.direction == "left":
+                self.gun.update(0, 0, flag=-1)
             self.direction = "right"
         if self.direction == "right":
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, 0)
             standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
         else:
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1], 0)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, 0)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, 0)
         ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
-        if keys[pygame.K_w]:
+        if (self.player_id == 1 and keys[pygame.K_w]) or (self.player_id == 2 and keys[pygame.K_o]):
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
             if standing_on['solid'] + standing_on2['solid'] >= 1:
@@ -162,6 +181,8 @@ class Hero(pygame.sprite.Sprite):
                     self.image = self.jump_l
                 else:
                     self.image = self.jump_r
+        if (self.player_id == 1 and keys[pygame.K_s]) or (self.player_id == 2 and keys[pygame.K_l]):
+            self.jump_frame = 0
         if not flag:
             if self.direction == "left":
                 self.image = self.stand_l
@@ -181,25 +202,34 @@ class Hero(pygame.sprite.Sprite):
                 above_tile = get_tile_properties(game_map.map, self.rect.topleft[0], self.rect.topleft[1], 0)
                 above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0], self.rect.topright[1], 0)
                 if above_tile['up_solid'] + above_tile2['up_solid'] == 0:
-                    self.rect.y = self.rect.y - self.speed_y
+                    self.rect.y -= self.speed_y
                     self.gun.update(0, -self.speed_y)
                     self.jump_frame -= 1
                 else:
                     self.jump_frame = 0
             else:
                 if standing_on2['solid'] + standing_on['solid'] == 0:
-                    self.rect.y = self.rect.y + self.speed_y
+                    self.rect.y += self.speed_y
                     self.gun.update(0, self.speed_y)
 
     def update(self, keys, game_map):
-        if self.shoot_cooldown > 0:
-            self.shoot_cooldown -= 1
-        if keys[pygame.K_e]:
-            self.shoot()
-        self.move(keys, game_map)
-        damage_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 1)
-        if damage_check["kill"] == 1:
-            print("die")
+        if self.health:
+            if self.shoot_cooldown > 0:
+                self.shoot_cooldown -= 1
+            if (self.player_id == 1 and keys[pygame.K_e]) or (self.player_id == 2 and keys[pygame.K_i]):
+                self.shoot()
+            self.move(keys, game_map)
+            self.kill_and_damage(game_map)
+            if self.rect.right < 0:
+                self.rect.x = 0
+                self.die()
+            elif self.rect.left > WINDOW_WIDTH:
+                self.rect.x = WINDOW_WIDTH - self.rect.width
+                self.die()
+            elif self.rect.bottom > WINDOW_HEIGHT:
+                self.die()
+        else:
+            self.die()
 
     def shoot(self):
         if self.shoot_cooldown == 0:
@@ -209,6 +239,25 @@ class Hero(pygame.sprite.Sprite):
             else:
                 bullet = Bullet(self.rect.x + self.rect.width // 4, self.rect.y + self.rect.height // 2, self.direction)
             bullet_group.add(bullet)
+
+    def die(self):
+        self.gun.kill()
+        self.health = 0
+        self.image = self.dead_image
+        self.rect.y -= self.speed_y // 2
+        self.die_flag = 1
+
+    def kill_and_damage(self, game_map):
+        damage_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 16, 1)
+        if damage_check["kill"] == 1:
+            self.health = 0
+            self.die()
+            self.gun.kill()
+        elif not self.fire_flag and damage_check["fire"] == 1:
+            self.health -= self.fire
+            self.fire_flag = 15
+        elif self.fire_flag:
+            self.fire_flag -= 1
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -224,12 +273,12 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self, map):
         if self.direction == "left":
-            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1] - 5, 0)
+            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1], 0)
             if left_tile["solid"]:
                 self.kill()
             self.rect.x -= self.speed
         else:
-            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1] - 5, 0)
+            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1], 0)
             if right_tile["solid"]:
                 self.kill()
             self.rect.x += self.speed
@@ -237,6 +286,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         for player in player_group:
             if pygame.sprite.collide_mask(self, player):
+                player.health -= 20
                 self.kill()
 
 
@@ -246,6 +296,8 @@ class Gun(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(load_image("images/gun.png", -1), (30, 20))
         self.left_move = pygame.transform.flip(self.image, True, False)
         self.right_move = self.image
+        if direction == "left":
+            self.image = self.left_move
         self.rect = self.image.get_rect().move(x, y)
         self.direction = direction
         self.player_width = player_width
@@ -281,36 +333,47 @@ class HealthBar(pygame.sprite.Sprite):
 
 
 class Game:
-    def __init__(self, map, hero1):
+    def __init__(self, map, hero1, hero2):
         self.map = map
-        # self.screen = screen
         self.hero1 = hero1
-        # self.hero2 = hero2
+        self.hero2 = hero2
+        self.flag = 0
+        self.winner = None
+        self.loser = None
 
     def render(self, screen, args):
+        if self.hero1.die_flag + self.hero2.die_flag == 1:
+            self.flag += 1
+            if not self.winner and not self.loser:
+                self.winner = self.win()
+                self.loser = self.lose()
         self.map.render(screen, 1, 3)
-        self.update_hero(args)
+        self.update_screen(args)
         self.hero1.render(screen)
+        self.hero2.render(screen)
         for gun in gun_group:
             gun.render(screen)
         self.map.render(screen, 2)
         for bullet in bullet_group:
             bullet.render(screen)
-        for health in health_group:
-            health.draw(10, screen)
-        # self.hero2.render(screen)
+        self.hero1.health_bar.draw(self.hero1.health, screen)
+        self.hero2.health_bar.draw(self.hero2.health, screen)
 
-    def update_hero(self, args):
-        # all_sprites.draw(self.screen)
+    def win(self):
+        if self.hero1.die_flag == 1:
+            return 2
+        return 1
+
+    def lose(self):
+        return 3 - self.win()
+
+    def update_screen(self, args):
         self.hero1.update(args, self.map)
+        self.hero2.update(args, self.map)
         bullet_group.update(self.map)
-        # all_sprites.update(keys)
 
-    def check_win(self):
-        pass
-
-    def check_lose(self):
-        pass
+    def game_over(self):
+        return not self.flag == 60
 
 
 def load_image(name, colorkey=None):
@@ -333,20 +396,20 @@ def main():
     pygame.init()
 
     map = Map("map2.tmx", [])
-    hero1 = Hero(1)
-    game = Game(map, hero1)
-    # hero2 = Hero("red")
+    hero1 = Hero(1, 0, 20)
+    hero2 = Hero(2, 1570, 20)
+    game = Game(map, hero1, hero2)
 
     clock = pygame.time.Clock()
 
     running = True
-    game_over = False
     fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back1.jpeg'), (MAP_WIDTH, MAP_HEIGHT))
     pygame.mixer.init()
     pygame.mixer.music.load(random.choice([MUSIC_DIR + 'inazuma' + f'{i}.mp3' for i in range(1, 6)]))
     pygame.mixer.music.play(999)
     pygame.mixer.music.set_volume(0.5)
     while running:
+        running = game.game_over()
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
