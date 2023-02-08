@@ -61,12 +61,12 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y):
+    def __init__(self, player_id, x, y, speed_coeff=1, health_coeff=1, gun_coeff=1):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
 
-        self.speed_x = 3
-        self.speed_y = 6
+        self.speed_x = 3 * speed_coeff
+        self.speed_y = 6 * speed_coeff
         self.fly = 0
         self.climb = False
 
@@ -76,7 +76,7 @@ class Hero(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, 28, 40)
 
         self.climb_flag = 0
-        self.health = 100
+        self.health = 100 * health_coeff
         self.shoot_cooldown = 0
         self.fire_flag = 0
         self.fire = 20
@@ -87,12 +87,13 @@ class Hero(pygame.sprite.Sprite):
             self.direction = "right"
             self.image = self.stand_r
             self.health_bar = HealthBar(0, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
         else:
             self.direction = "left"
             self.image = self.stand_l
             self.health_bar = HealthBar(1450, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width)
+            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width,
+                           gun_coeff)
 
         health_group.add(self.health_bar)
         gun_group.add(self.gun)
@@ -213,7 +214,7 @@ class Hero(pygame.sprite.Sprite):
                     self.gun.update(0, self.speed_y)
 
     def update(self, keys, game_map):
-        if self.health:
+        if self.health > 0:
             if self.shoot_cooldown > 0:
                 self.shoot_cooldown -= 1
             if (self.player_id == 1 and keys[pygame.K_e]) or (self.player_id == 2 and keys[pygame.K_i]):
@@ -261,12 +262,13 @@ class Hero(pygame.sprite.Sprite):
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, gun_coeff):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 30
         self.image = pygame.transform.scale(load_image("images/bullet1.png"), (40, 10))
         self.rect = self.image.get_rect().move(x, y)
         self.direction = direction
+        self.damage = 20 * gun_coeff
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -286,7 +288,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         for player in player_group:
             if pygame.sprite.collide_mask(self, player):
-                player.health -= 20
+                player.health -= self.damage
                 self.kill()
 
 
