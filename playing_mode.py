@@ -88,12 +88,13 @@ class Hero(pygame.sprite.Sprite):
             self.direction = "right"
             self.image = self.stand_r
             self.health_bar = HealthBar(0, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
         else:
             self.direction = "left"
             self.image = self.stand_l
             self.health_bar = HealthBar(1450, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width,
+                           gun_coeff)
 
         health_group.add(self.health_bar)
         gun_group.add(self.gun)
@@ -295,16 +296,26 @@ class Bullet(pygame.sprite.Sprite):
 
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction, player_width):
+    def __init__(self, x, y, direction, player_width, gun_coeff):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(load_image("images/gun.png", -1), (30, 20))
+        self.direction = direction
+        self.x = x
+        self.image = self.sheet(gun_coeff)
+
         self.left_move = pygame.transform.flip(self.image, True, False)
         self.right_move = self.image
         if direction == "left":
             self.image = self.left_move
-        self.rect = self.image.get_rect().move(x, y)
-        self.direction = direction
+        self.rect = self.image.get_rect().move(self.x, y)
         self.player_width = player_width
+
+    def sheet(self, gun_coeff):
+        guns = {1: ["images/guns/gun1.png", (35, 20)], 1.25: ["images/guns/gun2.png", (35, 20)],
+                1.5: ["images/guns/gun3.png", (40, 25)], 1.75: ["images/guns/gun4.png", (45, 20)],
+                2.0: ["images/guns/gun5.png", (35, 25)], 2.5: ["images/guns/gun6.png", (35, 25)]}
+        if self.direction == "left":
+            self.x -= guns[gun_coeff][1][0]
+        return pygame.transform.scale(load_image(guns[gun_coeff][0], -1), guns[gun_coeff][1])
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -312,10 +323,10 @@ class Gun(pygame.sprite.Sprite):
     def update(self, x, y, flag=0):
         if flag < 0:
             self.image = self.right_move
-            self.rect.x += self.player_width
+            self.rect.x += self.rect.width
         elif flag > 0:
             self.image = self.left_move
-            self.rect.x -= self.player_width
+            self.rect.x -= self.rect.width
         self.rect.x += x
         self.rect.y += y
 
