@@ -81,19 +81,19 @@ class Hero(pygame.sprite.Sprite):
         self.fire_flag = 0
         self.fire = 20
         self.die_flag = 0
+        self.gun_coeff = gun_coeff
 
         self.sheet()
         if self.player_id == 1:
             self.direction = "right"
             self.image = self.stand_r
             self.health_bar = HealthBar(0, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width)
         else:
             self.direction = "left"
             self.image = self.stand_l
             self.health_bar = HealthBar(1450, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width,
-                           gun_coeff)
+            self.gun = Gun(self.rect.centerx - self.rect.width, self.rect.centery, self.direction, self.rect.width)
 
         health_group.add(self.health_bar)
         gun_group.add(self.gun)
@@ -236,9 +236,11 @@ class Hero(pygame.sprite.Sprite):
         if self.shoot_cooldown == 0:
             self.shoot_cooldown = 30
             if self.direction == "left":
-                bullet = Bullet(self.rect.x - self.rect.width // 2, self.rect.y + self.rect.height // 2, self.direction)
+                bullet = Bullet(self.rect.x - self.rect.width // 2, self.rect.y + self.rect.height // 2, self.direction,
+                                self.gun_coeff)
             else:
-                bullet = Bullet(self.rect.x + self.rect.width // 4, self.rect.y + self.rect.height // 2, self.direction)
+                bullet = Bullet(self.rect.x + self.rect.width // 4, self.rect.y + self.rect.height // 2, self.direction,
+                                self.gun_coeff)
             bullet_group.add(bullet)
 
     def die(self):
