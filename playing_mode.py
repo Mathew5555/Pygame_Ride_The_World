@@ -156,11 +156,11 @@ class Hero(pygame.sprite.Sprite):
                 elif direction == "right":
                     return self.joystick.get_button(14)
                 elif direction == "up":
-                    return self.joystick.get_button(11)
+                    return self.joystick.get_button(0)
                 elif direction == "down":
                     return self.joystick.get_button(12)
                 elif direction == "shoot":
-                    return self.joystick.get_button(0)
+                    return self.joystick.get_button(1)
         if not self.joy:
             if direction == "left":
                 return keys[pygame.K_k]
@@ -178,11 +178,11 @@ class Hero(pygame.sprite.Sprite):
             elif direction == "right":
                 return self.joystick.get_button(14)
             elif direction == "up":
-                return self.joystick.get_button(11)
+                return self.joystick.get_button(0)
             elif direction == "down":
                 return self.joystick.get_button(12)
             elif direction == "shoot":
-                return self.joystick.get_button(0)
+                return self.joystick.get_button(1)
 
     def move(self, keys, game_map):
         flag = 0
