@@ -6,7 +6,7 @@
  <image source="../for_maps/treetileset.IS5LJ.png" width="256" height="256"/>
  <tile id="0">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -26,7 +26,7 @@
  </tile>
  <tile id="2">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -36,7 +36,7 @@
  </tile>
  <tile id="3">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -46,7 +46,7 @@
  </tile>
  <tile id="4">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -66,7 +66,7 @@
  </tile>
  <tile id="6">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -86,7 +86,7 @@
  </tile>
  <tile id="8">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -106,7 +106,7 @@
  </tile>
  <tile id="10">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -116,7 +116,7 @@
  </tile>
  <tile id="11">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -126,7 +126,7 @@
  </tile>
  <tile id="12">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -146,7 +146,7 @@
  </tile>
  <tile id="14">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -166,7 +166,7 @@
  </tile>
  <tile id="16">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -186,7 +186,7 @@
  </tile>
  <tile id="18">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -196,7 +196,7 @@
  </tile>
  <tile id="19">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -206,7 +206,7 @@
  </tile>
  <tile id="20">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -226,7 +226,7 @@
  </tile>
  <tile id="22">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -266,7 +266,7 @@
  </tile>
  <tile id="26">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -276,7 +276,7 @@
  </tile>
  <tile id="27">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
@@ -286,7 +286,7 @@
  </tile>
  <tile id="28">
   <properties>
-   <property name="climb" type="int" value="0"/>
+   <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
    <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
