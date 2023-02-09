@@ -24,9 +24,9 @@ def get_tile_properties(tmx_data, x, y, layer):
     try:
         properties = tmx_data.get_tile_properties(tile_x, tile_y, layer)
     except:
-        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
+        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0, "hill": 0}
     if properties is None:
-        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0}
+        properties = {"solid": 0, "climb": 0, "kill": 0, "fire": 0, "up_solid": 0, "hill": 0}
     return properties
 
 
@@ -61,10 +61,11 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y, speed_coeff=1.0, health_coeff=1.0, gun_coeff=1.0):
+    def __init__(self, player_id, x, y, speed_coeff=1.0, health=250, gun_coeff=1.0):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
 
+        self.gravity = 1
         self.speed_x = 3 * speed_coeff
         self.speed_y = 6 * speed_coeff
         self.fly = 0
@@ -76,7 +77,7 @@ class Hero(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, 28, 40)
 
         self.climb_flag = 0
-        self.health = 100 * health_coeff
+        self.health = health
         self.shoot_cooldown = 0
         self.fire_flag = 0
         self.fire = 20
@@ -115,17 +116,17 @@ class Hero(pygame.sprite.Sprite):
         self.land_l = pygame.transform.flip(self.land_r, True, False)
 
         right = [
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk01.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk02.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk03.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk04.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk05.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk06.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk07.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk08.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk09.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk10.png"),
-            load_image(f"man/p{self.player_id}_walk/PNG/p{self.player_id}_walk11.png")
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk01.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk02.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk03.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk04.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk05.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk06.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk07.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk08.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk09.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk10.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk11.png")
         ]
 
         self.right = [pygame.transform.scale(image, (self.rect.width, self.rect.height)) for image in right]
@@ -222,6 +223,7 @@ class Hero(pygame.sprite.Sprite):
                 self.shoot()
             self.move(keys, game_map)
             self.kill_and_damage(game_map)
+            self.hill(game_map)
             if self.rect.right < 0:
                 self.rect.x = 0
                 self.die()
@@ -262,6 +264,11 @@ class Hero(pygame.sprite.Sprite):
             self.fire_flag = 15
         elif self.fire_flag:
             self.fire_flag -= 1
+
+    def hill(self, game_map):
+        hill_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.centery, 1)
+        if hill_check["hill"] == 1 and self.health < self.health_bar.max_health:
+            self.health += 0.3
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -433,6 +440,8 @@ def main():
         game.render(screen, keys)
         clock.tick(FPS)
         pygame.display.flip()
+
+    """ФИНАЛЬНОЕ ОКНО"""
     pygame.quit()
 
 

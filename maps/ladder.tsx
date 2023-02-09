@@ -8,6 +8,7 @@
   <properties>
    <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
+   <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
    <property name="up_solid" type="int" value="0"/>
@@ -18,6 +19,7 @@
   <properties>
    <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
+   <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
    <property name="up_solid" type="int" value="0"/>
@@ -28,6 +30,7 @@
   <properties>
    <property name="climb" type="int" value="1"/>
    <property name="fire" type="int" value="0"/>
+   <property name="hill" type="int" value="0"/>
    <property name="kill" type="int" value="0"/>
    <property name="solid" type="int" value="0"/>
    <property name="up_solid" type="int" value="0"/>
