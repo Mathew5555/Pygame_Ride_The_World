@@ -5,7 +5,6 @@
  <tileset firstgid="129" source="treetop.2v2ss.tsx"/>
  <tileset firstgid="193" source="ladder.tsx"/>
  <tileset firstgid="200" source="liquidWaterTop.tsx"/>
- <tileset firstgid="204" source="lava.IyYsS.tsx"/>
  <tileset firstgid="205" source="lava1.tsx"/>
  <tileset firstgid="206" source="spikes1.tsx"/>
  <layer id="1" name="Слой тайлов 1" width="50" height="30">
