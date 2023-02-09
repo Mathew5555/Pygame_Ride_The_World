@@ -61,9 +61,11 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y, speed_coeff=1.0, health=250, gun_coeff=1.0):
+    def __init__(self, player_id, x, y, joy, speed_coeff=1.0, health=250, gun_coeff=1.0, joystick=None):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
+        self.joy = joy
+        self.joystick = joystick
 
         self.gravity = 1
         self.speed_x = 3 * speed_coeff
@@ -135,9 +137,56 @@ class Hero(pygame.sprite.Sprite):
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
+    def button(self, keys, direction):
+        if self.player_id == 1:
+            if not self.joy:
+                if direction == "left":
+                    return keys[pygame.K_a]
+                elif direction == "right":
+                    return keys[pygame.K_d]
+                elif direction == "up":
+                    return keys[pygame.K_w]
+                elif direction == "down":
+                    return keys[pygame.K_s]
+                elif direction == "shoot":
+                    return keys[pygame.K_e]
+            else:
+                if direction == "left":
+                    return self.joystick.get_button(13)
+                elif direction == "right":
+                    return self.joystick.get_button(14)
+                elif direction == "up":
+                    return self.joystick.get_button(11)
+                elif direction == "down":
+                    return self.joystick.get_button(12)
+                elif direction == "shoot":
+                    return self.joystick.get_button(0)
+        if not self.joy:
+            if direction == "left":
+                return keys[pygame.K_k]
+            elif direction == "right":
+                return keys[pygame.K_SEMICOLON]
+            elif direction == "up":
+                return keys[pygame.K_o]
+            elif direction == "down":
+                return keys[pygame.K_l]
+            elif direction == "shoot":
+                return keys[pygame.K_i]
+        else:
+            if direction == "left":
+                return self.joystick.get_button(13)
+            elif direction == "right":
+                return self.joystick.get_button(14)
+            elif direction == "up":
+                return self.joystick.get_button(11)
+            elif direction == "down":
+                return self.joystick.get_button(12)
+            elif direction == "shoot":
+                return self.joystick.get_button(0)
+
     def move(self, keys, game_map):
         flag = 0
-        if (self.player_id == 1 and keys[pygame.K_a]) or (self.player_id == 2 and keys[pygame.K_k]):
+        if self.button(keys, "left"):
             left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - self.speed_x,
                                             self.rect.bottomleft[1] - 5, 0)
             if left_tile['solid'] == 0:
@@ -152,7 +201,7 @@ class Hero(pygame.sprite.Sprite):
             elif self.direction == "right":
                 self.gun.update(0, 0, flag=1)
             self.direction = "left"
-        if (self.player_id == 1 and keys[pygame.K_d]) or (self.player_id == 2 and keys[pygame.K_SEMICOLON]):
+        if self.button(keys, "right"):
             right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + self.speed_x,
                                              self.rect.bottomright[1] - 5, 0)
             if right_tile['solid'] == 0:
@@ -174,7 +223,7 @@ class Hero(pygame.sprite.Sprite):
             standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, 0)
             standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, 0)
         ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
-        if (self.player_id == 1 and keys[pygame.K_w]) or (self.player_id == 2 and keys[pygame.K_o]):
+        if self.button(keys, "up"):
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
             if standing_on['solid'] + standing_on2['solid'] >= 1:
@@ -184,7 +233,7 @@ class Hero(pygame.sprite.Sprite):
                     self.image = self.jump_l
                 else:
                     self.image = self.jump_r
-        if (self.player_id == 1 and keys[pygame.K_s]) or (self.player_id == 2 and keys[pygame.K_l]):
+        if self.button(keys, "down"):
             self.jump_frame = 0
         if not flag:
             if self.direction == "left":
@@ -219,7 +268,7 @@ class Hero(pygame.sprite.Sprite):
         if self.health > 0:
             if self.shoot_cooldown > 0:
                 self.shoot_cooldown -= 1
-            if (self.player_id == 1 and keys[pygame.K_e]) or (self.player_id == 2 and keys[pygame.K_i]):
+            if self.button(keys, "shoot"):
                 self.shoot()
             self.move(keys, game_map)
             self.kill_and_damage(game_map)
@@ -414,12 +463,20 @@ def load_image(name, colorkey=None):
 
 
 def main():
+    joy = True
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.init()
-
+    if joy:
+        joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+        for el in joysticks:
+            el.init()
+        print(joysticks)
+        hero1 = Hero(1, 0, 20, joy, joystick=joysticks[0])
+        hero2 = Hero(2, 1570, 20, joy, joystick=joysticks[1])
+    else:
+        hero1 = Hero(1, 0, 20, joy)
+        hero2 = Hero(2, 1570, 20, joy)
     map = Map("map2.tmx", [])
-    hero1 = Hero(1, 0, 20)
-    hero2 = Hero(2, 1570, 20)
     game = Game(map, hero1, hero2)
 
     clock = pygame.time.Clock()
