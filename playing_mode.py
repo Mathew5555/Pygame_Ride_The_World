@@ -61,7 +61,7 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y, speed_coeff=1, health_coeff=1, gun_coeff=1):
+    def __init__(self, player_id, x, y, speed_coeff=1.0, health_coeff=1.0, gun_coeff=1.0):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
 
