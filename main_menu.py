@@ -16,8 +16,140 @@ RUNNING = True
 PLATFORMS = pygame.sprite.Group()
 
 
-class Hero:
-    pass
+class Hero(pygame.sprite.Sprite):
+    def __init__(self, player_id, x, y, joy, joystick=None):
+        super().__init__(player_group, all_sprites)
+        self.player_id = player_id
+        self.joy = joy
+        self.joystick = joystick
+
+        self.gravity = 1
+        self.fly = 0
+
+        self.cur_frame = 0
+        self.jump_frame = 0
+
+        self.rect = pygame.Rect(x, y, 28, 40)
+
+        self.sheet()
+        if self.player_id == 1:
+            self.direction = "right"
+            self.image = self.stand_r
+        else:
+            self.direction = "left"
+            self.image = self.stand_l
+
+    def sheet(self):
+        self.dead_image = pygame.transform.scale(load_image(f"images/ghost.png"),
+                                                 (self.rect.width, self.rect.height))
+        self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
+                                              (self.rect.width, self.rect.height))
+        self.stand_l = pygame.transform.flip(self.stand_r, True, False)
+
+        self.jump_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_jump.png"),
+                                             (self.rect.width, self.rect.height))
+        self.jump_l = pygame.transform.flip(self.jump_r, True, False)
+
+        self.land_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_hurt.png"),
+                                             (self.rect.width, self.rect.height))
+        self.land_l = pygame.transform.flip(self.land_r, True, False)
+
+        right = [
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk01.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk02.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk03.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk04.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk05.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk06.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk07.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk08.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk09.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk10.png"),
+            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk11.png")
+        ]
+
+        self.right = [pygame.transform.scale(image, (self.rect.width, self.rect.height)) for image in right]
+        self.left = [pygame.transform.flip(image, True, False) for image in self.right]
+
+    def render(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
+    def button(self, keys, direction):
+        if self.player_id == 1:
+            if not self.joy:
+                if direction == "left":
+                    return keys[pygame.K_a]
+                elif direction == "right":
+                    return keys[pygame.K_d]
+                elif direction == "up":
+                    return keys[pygame.K_w]
+                elif direction == "down":
+                    return keys[pygame.K_s]
+                elif direction == "shoot":
+                    return keys[pygame.K_e]
+            else:
+                if direction == "left":
+                    return self.joystick.get_button(13)
+                elif direction == "right":
+                    return self.joystick.get_button(14)
+                elif direction == "up":
+                    return self.joystick.get_button(11)
+                elif direction == "down":
+                    return self.joystick.get_button(12)
+                elif direction == "shoot":
+                    return self.joystick.get_button(0)
+        if not self.joy:
+            if direction == "left":
+                return keys[pygame.K_k]
+            elif direction == "right":
+                return keys[pygame.K_SEMICOLON]
+            elif direction == "up":
+                return keys[pygame.K_o]
+            elif direction == "down":
+                return keys[pygame.K_l]
+            elif direction == "shoot":
+                return keys[pygame.K_i]
+        else:
+            if direction == "left":
+                return self.joystick.get_button(13)
+            elif direction == "right":
+                return self.joystick.get_button(14)
+            elif direction == "up":
+                return self.joystick.get_button(11)
+            elif direction == "down":
+                return self.joystick.get_button(12)
+            elif direction == "shoot":
+                return self.joystick.get_button(0)
+
+    def move(self, keys):
+        flag = 0
+        if self.button(keys, "left"):
+            self.rect.x -= 1
+            self.cur_frame = (self.cur_frame + 1) % len(self.left)
+            self.image = self.left[self.cur_frame]
+        if self.button(keys, "right"):
+            self.rect.x += 1
+            self.cur_frame = (self.cur_frame + 1) % len(self.right)
+            self.image = self.right[self.cur_frame]
+        if self.button(keys, "up"):
+            self.jump_frame = 20
+            flag = 1
+            if self.direction == "left":
+                self.image = self.jump_l
+            else:
+                self.image = self.jump_r
+        if self.button(keys, "down"):
+            self.jump_frame = 0
+        if not flag:
+            if self.direction == "left":
+                self.image = self.stand_l
+            else:
+                self.image = self.stand_r
+        if self.jump_frame > 0:
+            self.rect.y -= 1
+            self.jump_frame -= 1
+        else:
+            self.rect.y += 1
 
 
 class Platform(pygame.sprite.Sprite):
