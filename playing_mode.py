@@ -468,7 +468,7 @@ def main():
     clock = pygame.time.Clock()
 
     running = True
-    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back1.jpeg'), (MAP_WIDTH, MAP_HEIGHT))
+    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (MAP_WIDTH, MAP_HEIGHT))
     pygame.mixer.init()
     pygame.mixer.music.load(random.choice([MUSIC_DIR + 'inazuma' + f'{i}.mp3' for i in range(1, 6)]))
     pygame.mixer.music.play(999)
