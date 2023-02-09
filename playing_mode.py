@@ -61,7 +61,7 @@ class Tile(pygame.sprite.Sprite):
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y, joy, speed_coeff=1.0, health=250, gun_coeff=1.0, joystick=None):
+    def __init__(self, player_id, x, y, joy, color, speed_coeff=1.0, health=250, gun_coeff=1.0, joystick=None):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
         self.joy = joy
@@ -86,15 +86,16 @@ class Hero(pygame.sprite.Sprite):
         self.die_flag = 0
         self.gun_coeff = gun_coeff
 
+        self.color = color
         self.sheet()
         if self.player_id == 1:
             self.direction = "right"
-            self.image = self.stand_r
+            self.image = self.images_dict["stand_r"]
             self.health_bar = HealthBar(0, 2, self.health, self.health)
             self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
         else:
             self.direction = "left"
-            self.image = self.stand_l
+            self.image = self.images_dict["stand_l"]
             self.health_bar = HealthBar(1450, 2, self.health, self.health)
             self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width,
                            gun_coeff)
@@ -103,36 +104,17 @@ class Hero(pygame.sprite.Sprite):
         gun_group.add(self.gun)
 
     def sheet(self):
-        self.dead_image = pygame.transform.scale(load_image(f"images/ghost.png"),
-                                                 (self.rect.width, self.rect.height))
-        self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
-                                              (self.rect.width, self.rect.height))
-        self.stand_l = pygame.transform.flip(self.stand_r, True, False)
-
-        self.jump_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_jump.png"),
-                                             (self.rect.width, self.rect.height))
-        self.jump_l = pygame.transform.flip(self.jump_r, True, False)
-
-        self.land_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_hurt.png"),
-                                             (self.rect.width, self.rect.height))
-        self.land_l = pygame.transform.flip(self.land_r, True, False)
-
-        right = [
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk01.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk02.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk03.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk04.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk05.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk06.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk07.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk08.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk09.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk10.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk11.png")
-        ]
-
-        self.right = [pygame.transform.scale(image, (self.rect.width, self.rect.height)) for image in right]
-        self.left = [pygame.transform.flip(image, True, False) for image in self.right]
+        images_path = {"dead_image": "ghost.png", "stand_r": f"{self.color}/stand.png",
+                       "jump_r": f"{self.color}/jump.png", "land_r": f"{self.color}/hit.png"}
+        self.images_dict = dict()
+        for key, val in images_path.items():
+            self.images_dict[key] = pygame.transform.scale(load_image(f"{IMAGES_DIR}" + val),
+                                                           (self.rect.width, self.rect.height))
+            if key != "dead_image":
+                self.images_dict[key[:-1] + "l"] = pygame.transform.flip(self.images_dict[key], True, False)
+        self.images_dict["right"] = [pygame.transform.scale(load_image(f"{IMAGES_DIR}{self.color}/walk{i + 1}.png"),
+                                                            (self.rect.width, self.rect.height)) for i in range(2)]
+        self.images_dict["left"] = [pygame.transform.flip(image, True, False) for image in self.images_dict["right"]]
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -195,8 +177,8 @@ class Hero(pygame.sprite.Sprite):
                     self.gun.update(-self.speed_x, 0, flag=1)
                 else:
                     self.gun.update(-self.speed_x, 0)
-                self.cur_frame = (self.cur_frame + 1) % len(self.left)
-                self.image = self.left[self.cur_frame]
+                self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["left"])
+                self.image = self.images_dict["left"][self.cur_frame]
                 flag = 1
             elif self.direction == "right":
                 self.gun.update(0, 0, flag=1)
@@ -210,8 +192,8 @@ class Hero(pygame.sprite.Sprite):
                     self.gun.update(self.speed_x, 0, flag=-1)
                 else:
                     self.gun.update(self.speed_x, 0)
-                self.cur_frame = (self.cur_frame + 1) % len(self.right)
-                self.image = self.right[self.cur_frame]
+                self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["right"])
+                self.image = self.images_dict["right"][self.cur_frame]
                 flag = 1
             elif self.direction == "left":
                 self.gun.update(0, 0, flag=-1)
@@ -230,16 +212,16 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_frame = 20
                 flag = 1
                 if self.direction == "left":
-                    self.image = self.jump_l
+                    self.image = self.images_dict["jump_l"]
                 else:
-                    self.image = self.jump_r
+                    self.image = self.images_dict["jump_r"]
         if self.button(keys, "down"):
             self.jump_frame = 0
-        if not flag:
+        if not flag and not self.jump_frame:
             if self.direction == "left":
-                self.image = self.stand_l
+                self.image = self.images_dict["stand_l"]
             else:
-                self.image = self.stand_r
+                self.image = self.images_dict["stand_r"]
         if self.climb:
             self.jump_frame = 0
             self.rect.y -= self.speed_y
@@ -262,6 +244,10 @@ class Hero(pygame.sprite.Sprite):
             else:
                 if standing_on2['solid'] + standing_on['solid'] == 0:
                     self.rect.y += self.speed_y
+                    if self.direction == "left":
+                        self.image = self.images_dict["land_l"]
+                    else:
+                        self.image = self.images_dict["land_r"]
                     self.gun.update(0, self.speed_y)
 
     def update(self, keys, game_map):
@@ -298,7 +284,7 @@ class Hero(pygame.sprite.Sprite):
     def die(self):
         self.gun.kill()
         self.health = 0
-        self.image = self.dead_image
+        self.image = self.images_dict["dead_image"]
         self.rect.y -= self.speed_y // 2
         self.die_flag = 1
 
@@ -324,7 +310,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, direction, gun_coeff):
         pygame.sprite.Sprite.__init__(self)
         self.speed = 30
-        self.image = pygame.transform.scale(load_image("images/bullet1.png"), (40, 10))
+        self.image = pygame.transform.scale(load_image(f"{IMAGES_DIR}bullet.png"), (40, 10))
         self.rect = self.image.get_rect().move(x, y)
         self.direction = direction
         self.damage = 20 * gun_coeff
@@ -366,9 +352,9 @@ class Gun(pygame.sprite.Sprite):
         self.player_width = player_width
 
     def sheet(self, gun_coeff):
-        guns = {1: ["images/guns/gun1.png", (35, 20)], 1.25: ["images/guns/gun2.png", (35, 20)],
-                1.5: ["images/guns/gun3.png", (40, 25)], 1.75: ["images/guns/gun4.png", (45, 20)],
-                2.0: ["images/guns/gun5.png", (35, 25)], 2.5: ["images/guns/gun6.png", (35, 25)]}
+        guns = {1: [f"{IMAGES_DIR}guns/gun1.png", (35, 20)], 1.25: [f"{IMAGES_DIR}guns/gun2.png", (35, 20)],
+                1.5: [f"{IMAGES_DIR}guns/gun3.png", (40, 25)], 1.75: [f"{IMAGES_DIR}guns/gun4.png", (45, 20)],
+                2.0: [f"{IMAGES_DIR}guns/gun5.png", (35, 25)], 2.5: [f"{IMAGES_DIR}guns/gun6.png", (35, 25)]}
         if self.direction == "left":
             self.x -= guns[gun_coeff][1][0]
         return pygame.transform.scale(load_image(guns[gun_coeff][0], -1), guns[gun_coeff][1])
@@ -463,7 +449,7 @@ def load_image(name, colorkey=None):
 
 
 def main():
-    joy = True
+    joy = False
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.init()
     if joy:
@@ -471,11 +457,11 @@ def main():
         for el in joysticks:
             el.init()
         print(joysticks)
-        hero1 = Hero(1, 0, 20, joy, joystick=joysticks[0])
-        hero2 = Hero(2, 1570, 20, joy, joystick=joysticks[1])
+        hero1 = Hero(1, 0, 20, joy, "blue", joystick=joysticks[0])
+        hero2 = Hero(2, 1570, 20, joy, "green", joystick=joysticks[1])
     else:
-        hero1 = Hero(1, 0, 20, joy)
-        hero2 = Hero(2, 1570, 20, joy)
+        hero1 = Hero(1, 0, 20, joy, "blue")
+        hero2 = Hero(2, 1570, 20, joy, "green")
     map = Map("map2.tmx", [])
     game = Game(map, hero1, hero2)
 
