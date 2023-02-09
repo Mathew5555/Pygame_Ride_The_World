@@ -14,6 +14,8 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
 RUNNING = True
 PLATFORMS = pygame.sprite.Group()
+all_sprites = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
 
 
 class Hero(pygame.sprite.Sprite):
@@ -29,7 +31,7 @@ class Hero(pygame.sprite.Sprite):
         self.cur_frame = 0
         self.jump_frame = 0
 
-        self.rect = pygame.Rect(x, y, 28, 40)
+        self.rect = pygame.Rect(x, y, 56, 80)
 
         self.sheet()
         if self.player_id == 1:
@@ -40,8 +42,6 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.stand_l
 
     def sheet(self):
-        self.dead_image = pygame.transform.scale(load_image(f"images/ghost.png"),
-                                                 (self.rect.width, self.rect.height))
         self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
                                               (self.rect.width, self.rect.height))
         self.stand_l = pygame.transform.flip(self.stand_r, True, False)
@@ -123,15 +123,15 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys):
         flag = 0
-        if self.button(keys, "left"):
-            self.rect.x -= 1
+        if self.button(keys, "left") and self.rect.x >= 10:
+            self.rect.x -= 10
             self.cur_frame = (self.cur_frame + 1) % len(self.left)
             self.image = self.left[self.cur_frame]
-        if self.button(keys, "right"):
-            self.rect.x += 1
+        if self.button(keys, "right") and self.rect.x <= 1440:
+            self.rect.x += 10
             self.cur_frame = (self.cur_frame + 1) % len(self.right)
             self.image = self.right[self.cur_frame]
-        if self.button(keys, "up"):
+        if self.button(keys, "up") and not self.jump_frame:
             self.jump_frame = 20
             flag = 1
             if self.direction == "left":
@@ -145,11 +145,12 @@ class Hero(pygame.sprite.Sprite):
                 self.image = self.stand_l
             else:
                 self.image = self.stand_r
-        if self.jump_frame > 0:
-            self.rect.y -= 1
-            self.jump_frame -= 1
-        else:
-            self.rect.y += 1
+        if not pygame.sprite.spritecollideany(self, PLATFORMS):
+            if self.jump_frame > 0:
+                self.rect.y -= 10
+                self.jump_frame -= 10
+            else:
+                self.rect.y += 10
 
 
 class Platform(pygame.sprite.Sprite):
@@ -164,9 +165,11 @@ class Platform(pygame.sprite.Sprite):
 
 
 class Menu:
-    def __init__(self, shop='store.png', info='info.png', start1='play1.png', start2='play1.png',
+    def __init__(self, hero1, hero2, shop='store.png', info='info.png', start1='play1.png', start2='play1.png',
                  check='check.png', sett='setting.png', exit='exit.png', plat='platform.png',
                  guide='user-guide.png', wardrobe='wardrobe.png', acc_im='user.png', logo='logo.png'):
+        self.hero1 = hero1
+        self.hero2 = hero2
         self.btn_acc = pic(acc_im, (20, 20), add=(70, 70))
         self.btn_shop = pic(shop, (110, 20), add=(70, 70))
         self.btn_wb = pic(wardrobe, (200, 20), add=(70, 70))
@@ -194,6 +197,8 @@ class Menu:
         self.effects = {j: pic(f'boom/{j}.png', (600, 350), add=(300, 300)) for j in range(1, 13)}
 
     def render(self, screen):
+        self.hero1.render(screen)
+        self.hero2.render(screen)
         screen.blit(*self.btn_start1)
         screen.blit(*self.btn_start2)
         screen.blit(*self.check_mark1)
@@ -267,16 +272,29 @@ def time_to_game(menu, timer):
 
 def main():
     global RUNNING
-    menu = Menu()
+    joy = False
+    if joy:
+        joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+        for el in joysticks:
+            el.init()
+        print(joysticks)
+        hero1 = Hero(1, 0, 20, joy, joystick=joysticks[0])
+        hero2 = Hero(2, 1570, 20, joy, joystick=joysticks[1])
+    else:
+        hero1 = Hero(1, 0, 20, joy)
+        hero2 = Hero(2, 1570, 20, joy)
+    menu = Menu(hero1, hero2)
     pygame.display.set_mode(WINDOW_SIZE)
     play()
     FON = split_animated_gif(IMAGES_DIR + 'fon.gif')[:]
     ind = 0
     timer = 0
     clock.tick(FPS)
+
     while RUNNING:
         screen.blit(FON[ind], (0, 0))
         for event in pygame.event.get():
+            keys = pygame.key.get_pressed()
             if event.type == pygame.QUIT:
                 RUNNING = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -311,6 +329,8 @@ def main():
         check_busy(sound_level)
         timer = time_to_game(menu, timer)
         menu.render(screen)
+        hero1.move(keys)
+        hero2.move(keys)
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
 
