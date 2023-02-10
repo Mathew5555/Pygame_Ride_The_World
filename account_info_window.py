@@ -30,8 +30,8 @@ class Account:
         screen.blit(bottom, (30, 130))
         screen.blit(bottom, (x + 30, 130))
 
-        screen.blit(*pic(self.im1, (50, 150), add=(150, 150)))
-        screen.blit(*pic(self.im2, (50 + x, 150), add=(150, 150)))
+        screen.blit(*pic(self.im1 + '/stand.png', (50, 150), add=(150, 150)))
+        screen.blit(*pic(self.im2 + '/stand.png', (50 + x, 150), add=(150, 150)))
         t = len(self.info[0]) - 1
         text = ['ID', 'Уровень игрока:', 'Баланс монет:', 'Кол-во убийств:', 'Лучший результат:']
         for i in range(t):

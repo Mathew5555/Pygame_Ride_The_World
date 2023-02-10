@@ -1,6 +1,7 @@
 import random
 from funcs_backend import *
 import pygame
+import sqlite3
 from consts import *
 from info_window import info
 from settings_window import settings
@@ -25,8 +26,8 @@ class Hero(pygame.sprite.Sprite):
         self.joystick = joystick
 
         self.gravity = 1
-        self.speed_x = 3
-        self.speed_y = 6
+        self.speed_x = 5
+        self.speed_y = 5
         self.fly = 0
 
         self.cur_frame = 0
@@ -146,13 +147,7 @@ class Hero(pygame.sprite.Sprite):
                 self.image = self.images_dict["stand_r"]
         if self.jump_frame > 0:
             self.rect.y -= 10
-            self.jump_frame -= 2
-        # if not pygame.sprite.spritecollideany(self, PLATFORMS) and not self.jump_frame:
-        #     self.rect.y += self.speed_y
-        #     if self.direction == "left" :
-        #         self.image = self.images_dict["land_l"]
-        #     else:
-        #         self.image = self.images_dict["land_r"]
+            self.jump_frame -= 1
 
 
 class Platform(pygame.sprite.Sprite):
@@ -169,7 +164,7 @@ class Platform(pygame.sprite.Sprite):
 class Menu:
     def __init__(self, hero1, hero2, shop='store.png', info='info.png', start1='play1.png', start2='play1.png',
                  check='check.png', sett='setting.png', exit='exit.png', plat='platform.png',
-                 guide='user-guide.png', wardrobe='wardrobe.png', acc_im='user.png', logo='logo.png'):
+                 guide='user-guide.png', wardrobe='wardrobe.png', acc_im='user.png', logo='our_logo.png'):
         self.hero1 = hero1
         self.hero2 = hero2
         self.btn_acc = pic(acc_im, (20, 20), add=(70, 70))
@@ -181,7 +176,7 @@ class Menu:
         self.btn_info = pic(info, (1160, 20))
         self.btn_exit = pic(exit, (1330, 20))
 
-        self.logo_image = pic(logo, (600, 150), add=(300, 200))
+        self.logo_image = pic(logo, (600, 50), add=(300, 300))
 
         self.btn_start1 = pic(start1, (300, 900))
         self.btn_start2 = pic(start2, (1050, 900))
@@ -275,16 +270,19 @@ def time_to_game(menu, timer):
 def main():
     global RUNNING
     joy = False
+    con = sqlite3.connect('data/account_info.db')
+    cur = con.cursor()
+    res = cur.execute("""SELECT curr_skin FROM info""").fetchall()
     if joy:
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         for el in joysticks:
             el.init()
         print(joysticks)
-        hero1 = Hero(1, 0, 20, 'pink', joy, joystick=joysticks[0])
-        hero2 = Hero(2, 1570, 20, 'brown', joy, joystick=joysticks[1])
+        hero1 = Hero(1, 250, 20, res[0][0], joy, joystick=joysticks[0])
+        hero2 = Hero(2, 1200, 20, res[1][0], joy, joystick=joysticks[1])
     else:
-        hero1 = Hero(1, 0, 20, 'pink', joy)
-        hero2 = Hero(2, 1570, 20, 'brown', joy)
+        hero1 = Hero(1, 250, 20, res[0][0], joy)
+        hero2 = Hero(2, 1200, 20, res[1][0], joy)
     menu = Menu(hero1, hero2)
     pygame.display.set_mode(WINDOW_SIZE)
     play()
@@ -315,7 +313,14 @@ def main():
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
                 if menu.btn_wb[1].collidepoint(*mouse):
+                    print(2)
                     menu.open_wb()
+                    print(1)
+                    res = cur.execute("""SELECT curr_skin FROM info""").fetchall()
+                    hero1.color = res[0][0]
+                    hero1.sheet()
+                    hero2.color = res[1][0]
+                    hero2.sheet()
                 if menu.btn_acc[1].collidepoint(*mouse):
                     menu.open_acc()
                 if menu.btn_exit[1].collidepoint(*mouse):
@@ -333,8 +338,15 @@ def main():
         menu.render(screen)
         hero1.move(keys)
         hero2.move(keys)
+        if not screen.get_rect().colliderect(hero1.rect):
+            hero1.rect.x = 250
+            hero1.rect.y = 20
+        if not screen.get_rect().colliderect(hero2.rect):
+            hero2.rect.x = 1200
+            hero2.rect.y = 20
         pygame.display.flip()
         ind = (ind + 1) % len(FON)
+    con.close()
 
 
 if __name__ == '__main__':

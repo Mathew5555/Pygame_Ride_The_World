@@ -50,6 +50,7 @@ def split_animated_gif(gif_file_path, screen=None):
                     text1 = font.render(s[i], True, (255, 255, 255))
                     screen.blit(text1, (600 + i * 50, 100))
                 screen.blit(text, (100, 100))
+                screen.blit(*pic('our_logo.png', (50, 500), add=(300, 300)))
                 pygame.display.flip()
                 total += 1
     else:

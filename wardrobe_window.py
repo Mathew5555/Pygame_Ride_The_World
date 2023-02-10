@@ -52,7 +52,7 @@ class Wardrobe:
         cnt = 0
         for i in range(self.ind - 3, self.ind):
             try:
-                screen.blit(*pic(self.player1[i], (200 + cnt * 400, 350), add=(300, 300)))
+                screen.blit(*pic(self.player1[i] + '/stand.png', (200 + cnt * 400, 350), add=(300, 300)))
                 k = (i + len(self.player1) + 1) % len(self.player1)
                 if k == 0:
                     k = len(self.player1)
@@ -67,7 +67,7 @@ class Wardrobe:
         cnt = 0
         for i in range(self.ind - 3, self.ind):
             try:
-                screen.blit(*pic(self.player2[i], (200 + cnt * 400, 350), add=(300, 300)))
+                screen.blit(*pic(self.player2[i] + '/stand.png', (200 + cnt * 400, 350), add=(300, 300)))
                 k = (i + len(self.player2) + 1) % len(self.player2)
                 if k == 0:
                     k = len(self.player2)

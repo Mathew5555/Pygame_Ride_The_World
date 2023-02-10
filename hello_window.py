@@ -7,6 +7,7 @@ from consts import *
 MUSIC_DIR = "music/"
 IMAGES_DIR = "images/"
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1535, 864
+pygame.display.set_caption('Ride The World - BETA 1.0')
 FON = []
 
 
