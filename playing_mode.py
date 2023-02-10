@@ -12,6 +12,7 @@ bullet_group = pygame.sprite.Group()
 gun_group = pygame.sprite.Group()
 health_group = pygame.sprite.Group()
 UPDATED = False
+MAP_NAME = ""
 
 
 def get_tile_properties(tmx_data, x, y, layer):
@@ -41,7 +42,7 @@ class Map:
                     image = self.map.get_tile_image(x, y, el - 1)
                     if image is None:
                         continue
-                    if el == 2:
+                    if el == 2 and len(args) != 6:
                         screen.blit(image, (x * self.tile_size, y * self.tile_size + 16))
                     else:
                         screen.blit(image, (x * self.tile_size, y * self.tile_size))
@@ -162,10 +163,13 @@ class Hero(pygame.sprite.Sprite):
                 return self.joystick.get_button(1)
 
     def move(self, keys, game_map):
+        map_flag = 0
+        if MAP_NAME == "map_2.tmx":
+            map_flag = 2
         flag = 0
         if self.button(keys, "left"):
             left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - self.speed_x,
-                                            self.rect.bottomleft[1] - 5, 0)
+                                            self.rect.bottomleft[1] - 5, map_flag)
             if left_tile['solid'] == 0:
                 self.rect.x -= self.speed_x
                 if self.direction == "right":
@@ -180,7 +184,7 @@ class Hero(pygame.sprite.Sprite):
             self.direction = "left"
         if self.button(keys, "right"):
             right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + self.speed_x,
-                                             self.rect.bottomright[1] - 5, 0)
+                                             self.rect.bottomright[1] - 5, map_flag)
             if right_tile['solid'] == 0:
                 self.rect.x += self.speed_x
                 if self.direction == "left":
@@ -194,12 +198,12 @@ class Hero(pygame.sprite.Sprite):
                 self.gun.update(0, 0, flag=-1)
             self.direction = "right"
         if self.direction == "right":
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, 0)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], 0)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], map_flag)
         else:
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, 0)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, 0)
-        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, 2)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
+        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, map_flag + 2)
         if self.button(keys, "up"):
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
@@ -228,8 +232,8 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_frame = 0
                 self.climb_flag -= 1
             if self.jump_frame > 0:
-                above_tile = get_tile_properties(game_map.map, self.rect.topleft[0], self.rect.topleft[1], 0)
-                above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0], self.rect.topright[1], 0)
+                above_tile = get_tile_properties(game_map.map, self.rect.topleft[0], self.rect.topleft[1], map_flag)
+                above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0], self.rect.topright[1], map_flag)
                 if above_tile['up_solid'] + above_tile2['up_solid'] == 0:
                     self.rect.y -= self.speed_y
                     self.gun.update(0, -self.speed_y)
@@ -314,13 +318,16 @@ class Bullet(pygame.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
     def update(self, map):
+        map_flag = 0
+        if MAP_NAME == "map_2.tmx":
+            map_flag = 2
         if self.direction == "left":
-            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1], 0)
+            left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1], map_flag)
             if left_tile["solid"]:
                 self.kill()
             self.rect.x -= self.speed
         else:
-            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1], 0)
+            right_tile = get_tile_properties(map.map, self.rect.midright[0] + 3, self.rect.bottomright[1], map_flag)
             if right_tile["solid"]:
                 self.kill()
             self.rect.x += self.speed
@@ -416,14 +423,18 @@ class Game:
             if not self.winner and not self.loser:
                 self.winner = self.win()
                 self.loser = self.lose()
-        self.map.render(screen, 1, 3)
+        if MAP_NAME == "map_2.tmx":
+            self.map.render(screen, 1, 2, 3, 4, 5, 6)
+        else:
+            self.map.render(screen, 1, 3)
         if not game_over:
             self.update_screen(args)
         self.hero1.render(screen)
         self.hero2.render(screen)
         for gun in gun_group:
             gun.render(screen)
-        self.map.render(screen, 2)
+        if MAP_NAME == "map2.tmx":
+            self.map.render(screen, 2)
         for bullet in bullet_group:
             bullet.render(screen)
         self.hero1.health_bar.draw(self.hero1.health, screen)
@@ -487,6 +498,8 @@ class Game:
 
 
 def main():
+    global MAP_NAME
+    MAP_NAME = "map_2.tmx"
     joy = False
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.init()
@@ -499,7 +512,7 @@ def main():
     else:
         hero1 = Hero(1, 0, 20, joy, "blue")
         hero2 = Hero(2, 1570, 20, joy, "yellow")
-    map = Map("map2.tmx", [])
+    map = Map(MAP_NAME, [])
     game = Game(map, hero1, hero2)
 
     clock = pygame.time.Clock()
@@ -538,7 +551,7 @@ def main():
         screen.blit(fon, (0, 0))
         game.render(screen, {}, game_over=True)
         game.render_end_screen(screen, game.win())
-        clock.tick(FPS)
+        clock.tick(FPS2)
         pygame.display.flip()
     pygame.quit()
 
