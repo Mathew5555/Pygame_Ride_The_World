@@ -87,14 +87,13 @@ class Hero(pygame.sprite.Sprite):
         if self.player_id == 1:
             self.direction = "right"
             self.image = self.images_dict["stand_r"]
-            self.health_bar = HealthBar(0, 2, self.health, self.health)
+            self.health_bar = HealthBar(2, 2, self.health, self.health, color)
             self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
         else:
             self.direction = "left"
             self.image = self.images_dict["stand_l"]
-            self.health_bar = HealthBar(1450, 2, self.health, self.health)
-            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width,
-                           gun_coeff)
+            self.health_bar = HealthBar(1420, 2, self.health, self.health, color)
+            self.gun = Gun(self.rect.centerx, self.rect.centery, self.direction, self.rect.width, gun_coeff)
 
         health_group.add(self.health_bar)
         gun_group.add(self.gun)
@@ -370,19 +369,35 @@ class Gun(pygame.sprite.Sprite):
 
 
 class HealthBar(pygame.sprite.Sprite):
-    def __init__(self, x, y, health, max_health):
+    def __init__(self, x, y, health, max_health, color):
         super().__init__()
         self.x = x
         self.y = y
         self.health = health
         self.max_health = max_health
+        self.color = color
+        self.image = pygame.transform.scale(load_image(f"{IMAGES_DIR}skins/{color}.png"), (50, 50))
 
     def draw(self, health, screen):
         self.health = health
         ratio = self.health / self.max_health
-        pygame.draw.rect(screen, pygame.Color("black"), (self.x - 2, self.y - 2, 150, 20))
-        pygame.draw.rect(screen, pygame.Color("red"), (self.x, self.y, 146, 16))
-        pygame.draw.rect(screen, pygame.Color("green"), (self.x, self.y, 146 * ratio, 16))
+        pygame.draw.rect(screen, pygame.Color("black"), (self.x - 2, self.y - 2, 180, 30))
+        pygame.draw.rect(screen, pygame.Color("red"), (self.x, self.y, 176, 26))
+        pygame.draw.rect(screen, pygame.Color("green"), (self.x, self.y, 176 * ratio, 26))
+
+        font = pygame.font.Font(FONT, 28)
+        text = font.render(str(round(self.health)), True, (255, 255, 255))
+        if self.x == 2:
+            text_x = 200
+            image_x = 250
+        else:
+            text_x = 1350
+            image_x = 1280
+        if self.health == 0:
+            self.image = pygame.transform.scale(load_image(f"{IMAGES_DIR}skins/{self.color}_kill.png"), (50, 50))
+        text_y = 0
+        screen.blit(text, (text_x, text_y))
+        screen.blit(self.image, (image_x, text_y))
 
 
 class Game:
@@ -479,12 +494,11 @@ def main():
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         for el in joysticks:
             el.init()
-        print(joysticks)
         hero1 = Hero(1, 0, 20, joy, "blue", joystick=joysticks[0])
         hero2 = Hero(2, 1570, 20, joy, "green", joystick=joysticks[1])
     else:
         hero1 = Hero(1, 0, 20, joy, "blue")
-        hero2 = Hero(2, 1570, 20, joy, "brown")
+        hero2 = Hero(2, 1570, 20, joy, "yellow")
     map = Map("map2.tmx", [])
     game = Game(map, hero1, hero2)
 
@@ -497,6 +511,7 @@ def main():
     pygame.mixer.music.play(999)
     pygame.mixer.music.set_volume(0.5)
     while running:
+        screen.fill((0, 0, 0))
         running = game.game_over()
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
@@ -504,6 +519,7 @@ def main():
                 running = False
         if hero1.die_flag and hero2.die_flag:
             running = False
+
         screen.blit(fon, (0, 0))
         game.render(screen, keys)
         clock.tick(FPS)
