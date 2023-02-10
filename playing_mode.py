@@ -5,10 +5,6 @@ import sqlite3
 from funcs_backend import pic, load_image
 from consts import *
 
-
-FPS = 60
-WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
-MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
 all_sprites = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
@@ -443,7 +439,7 @@ class Game:
         prize = (30, 10)
         loser_id = 2 if winner_id == 1 else 1
         text = (f'Получено монет у игрока {winner_id}: {prize[0]}', f'Получено монет у игрока {loser_id}: '
-f'{prize[1]}')
+                                                                    f'{prize[1]}')
 
         if not UPDATED:
             con = sqlite3.connect('data/account_info.db')
@@ -495,7 +491,7 @@ def main():
     clock = pygame.time.Clock()
 
     running = True
-    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (MAP_WIDTH, MAP_HEIGHT))
+    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.mixer.init()
     pygame.mixer.music.load(random.choice([MUSIC_DIR + 'mond' + f'{i}.mp3' for i in range(1, 3)]))
     pygame.mixer.music.play(999)
