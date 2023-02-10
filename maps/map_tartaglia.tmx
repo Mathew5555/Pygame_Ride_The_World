@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="1">
+ <tileset firstgid="1" source="for maps/itemsheet.tsx"/>
+ <tileset firstgid="305" source="for maps/grasssheet_labeled.tsx"/>
+ <tileset firstgid="860" source="for maps/Tiles.tsx"/>
+ <tileset firstgid="1004" source="for maps/TX Village Props.tsx"/>
+ <tileset firstgid="1260" source="for maps/TX Plant.tsx"/>
+ <tileset firstgid="1516" source="for maps/TX Tileset Ground.tsx"/>
+ <tileset firstgid="1580" source="for maps/123.tsx"/>
+ <tileset firstgid="1869" source="for maps/Иллюстрация-без-названия (28).tsx"/>
+ <layer id="5" name="земля" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1UsOgDAIRVEmjdtyu7q26sy53UA/WBQS70nezCohWEQAQCcnkWMgZ/KuFOirzXPE+W39e2+8u9UD7fOwk+n5I73d5dnLyLVhTMRdYlHTtsi6l8x8z2K2NXVUzks57262ji/vCu4lAH+h3V1Rc5FQuQEtHvqy
+  </data>
+ </layer>
+ <layer id="6" name="лестницы" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlkEOgCAMBDnxLh4j/kD8gfpse8Fw0DYlYIruXJfo1CygcwCAt5i8c9HX51ZYyDExnlJuhY0cd8ZTyq2QPY8HVymvpXVfyTOQZ6jNNZTurftKzwuJ8ZRy5bsu99Z9pW8UIuMp5RpK91H23R2YwxYju4N/oblP89rZYLc192leuxqcQ3N29PrHakHNHOhVP/7cK4tgDlt8ZQ4ASk4aPTYV
+  </data>
+ </layer>
+ <layer id="1" name="деревья" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlkmuAVEUhu+gLhPdBBPdBBMeEyxZtwDdAnQbwAp4wXsL0H1mlYiqSwkpOV/yTU7+nPuf2VVKEARB+AaallItbGMHu9anGz1Hj959HOAQRz69Y0zvCU5xhnOf3nFlQfclrnx8w5U1/Tf46/M7BEEQBEF4L1v+Djvc4x/+3/lLmOZe/a5p9sDsiCc8o9ZKBTConXNK3+56BJN99i5u2RCzMEYwinFMYFI752Ie7zDZZ+/ilk0xS2MGs5jHAha1cy7n8Q6TffYubtkSszL+YAVrWMeGds5VPd5hss/e5ZVvC4IbF74WPSs=
+  </data>
+ </layer>
+ <layer id="4" name="декорации" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlksOwVAUhs+g1Z1hJViGOUtgBSyh3o+ZGcaYeG3Aa+C7oTShDam0jZwv+ZM2ubfn+zs6IoqiKErc7DNS3pEt2ZA1SdopCNwER8FVcDbuDy54n8mJHMkhxT1wExwFV8HZuP+EFZ2XZPFld84L98x9JUZcS6RlJW2hKL+h4ohUnaQtolOjQ/0PeiiKoihKFLK2SI7k7dv7kJ11FNPe6u0UZubYenV5R5tzHdIlPdInA+u5bzf4XpNMeZ75erj3c1HwZvjnGrydwsyck4nPJ8g3jCL9SyH/IC4KdnpclM+4AsAkQ80=
+  </data>
+ </layer>
+</map>

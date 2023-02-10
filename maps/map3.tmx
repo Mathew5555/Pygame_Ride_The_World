@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="1">
+ <tileset firstgid="1" source="for maps/TX Tileset Ground Darken.tsx"/>
+ <tileset firstgid="65" source="for maps/watersheet.tsx"/>
+ <tileset firstgid="442" source="for maps/TX Props.tsx"/>
+ <tileset firstgid="698" source="for maps/Иллюстрация-без-названия (32).tsx"/>
+ <tileset firstgid="2042" source="for maps/Иллюстрация-без-названия (33).tsx"/>
+ <tileset firstgid="3386" source="for maps/Иллюстрация-без-названия (28).tsx"/>
+ <tileset firstgid="3675" source="for maps/itemsheet.tsx"/>
+ <tileset firstgid="3979" source="for maps/mainlevbuild.tsx"/>
+ <tileset firstgid="5003" source="for maps/TX Plant.tsx"/>
+ <tileset firstgid="5259" source="for maps/Иллюстрация-без-названия (31).tsx"/>
+ <tileset firstgid="6603" source="for maps/123.tsx"/>
+ <tileset firstgid="6892" source="for maps/Red-Tree.tsx"/>
+ <tileset firstgid="8446" source="for maps/Иллюстрация-без-названия (34).tsx"/>
+ <layer id="8" name="фон" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztz1mwz3UcBuA3FcVFpM1SOSetSoq0KSpptKci+xptWpQxU5YTohDigva9lBZdaC+0ar9oQdptUV2gshUe8z9nxpjpLne/78wz8+fM733fT1K84hWveMUrXvGKV7ziFa94xSte8Yr3/7zBZam4hZsZxE3cyA1cz0Cu41qu4WquYgD9uZJ+7JjbuSzpQle60Z0e9KQXvelDX3wfOZEXuZEfPdEXvdEfO2JP7Ip9sTP2xu7Yn6k2TOEeJjOJidzNBMYzjru4k7GM4Q5GM4qRpW/i28iIrAxhOvdyK7cxlGEMZwQV3I7vIyfyIjfyoyf6ojf6Y0fsiV3Zscv+vGTDLF7kBZ7nOWbyLM8wg6d5iid5gsd5rPQ7/i++iW8jI7Iyq5Sdadvdcx/38wAP8hAP8wiPIi9yU5WpL3qjP3bEnsz8j64vbPmcz/iUT/iYj5jPh3zA+7zHu7zDPOayTsZ6vvV7EQsrLeAbZvvby7zCq7zG67zBm7zF28xBXuRGfvREX/RGf+yIPbEr9sXO2Bu7Y3/+0PU7v7GKlfzKCpazjKUs4Rd+5id+5Ift7lhf+l3xd6W/+JMv/e0rvsZdcV/cmUWl27OY7/geeZEb+dETfdEb/bEj9sSu2Bc7Y2/sjv2pVZ6KmuzJHtSgOruzG7tSjV0IW2zbzL/8wyY2sp+/7cs+leqyN6t1rGEt7or74s5U3b8B30dO5EVu5EdP9EVv9MeO2BO7Yl/sjL2xO/bnSF1HcDiHcSiNOYRyymjEwRzEgTSkAfWpxwEcTwuaV/4+jmbspaM2dXBX3Bd3xs1xe/bH95ETeZEb+dETfdEb/bEj9sSu2Bc7Y2/sjv05R1c7zqYtZ3EmZ9CG1pzOabTiVE7hZE7iRFpytKxjOIomVP17m6Yci7vivrgz7o27cwK+j5zIi9zIj57oi97ojx2xJ3bFvtgZe2N37N9pr73sczmP87mAC7mIi7mEDlzKZVxORzpxBZ3pQle60Z0e9KQXvelDX/qxFfGgWrE=
+  </data>
+ </layer>
+ <layer id="3" name="декорации " width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt19tOE0Ecx/ERgXaX7taEO1rtPgD6FLSFcpDEBH0KwcQHGBM5FrDijUA8XmqE6hOoEbptOVSjiaBP4CERjKjxEL/Gml2bpgVqu67pP/nczGyzv99k9qJC1KeSibcKYWpCpJFBVnM60f5mnh4bZN/EC7x0aY+f84rsr/EGb13c4wvZv+Ibvru0R5Z75dOF0KDDrzudqD5unA/c/x18xCd8LvI9sCbZkzwjeVbyG1nzoGWmmfvvgRcK1CLfA2uSPckzkmclv5E1D1qf+vyH0xAQ4iB22pxOsvtZCAmxiGTIWmunw1EYAedy7XWek38Dm7YeA+Q/iZiLejQY3CE0GtaaJP85nHVRj3aDO4RjhrV2i/y3cdVFPQYM7hBOGdbaU/I/g2nr0agI0YRmeOCFAhUt8EGDrtS4QIl5R/4tbOOE/9daB/nCiCCKTnQhhm70oBd9+R79/0CftqAQAQSD1tp5cg1jBKMYwzgmEMckpjCdz59wqEeC/zAXMYMO8ocRsfV4RK4lLCMFE2lkkMUKVrGGdeTyPRZCxd9XrblO/hu4idPkH8QQrhzhe8c1NKl8H/DACwUqWuCDBh1+HFJrm//3JMl/F/dwmfyzmEOK/CbSCJMtgig60YUYutGDXvThOPoLetjPo5pzn/wP8LD1z/Ut3ruN9xgm2whGMYZxTCCOSUxhGheQKOhhP49qTo78j/GkoEeA+x3EYSyRbRkpmEgjgyxWsIo1rCNX0MN+Hk5MmPwRRCv8Xu3nUWoSB0rvz7B/qcwzxWaQ9w7hTIU9dnsed8pkXGQ/uY8es7x3DvMV9vhb57GX+QF6f5Jv
+  </data>
+ </layer>
+ <layer id="6" name="декорации 2" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1k0KwjAUBOCJeINk09v3Nir+LavgLyrVvQdwpKsuRDHUx6vzwZBdOy+EEEBEpG0UmnUSbHt8aloAM2ZeWDfJs2H/LbNzPodIF5730jj4uZdeqdh/xaydz1Gz/5W5OZ9D5J8s+L5Y9uCNsecMhx7MIT4cY7Oeom2PXMOE8h5RnhnrLjlCAgbJusV3LjxD3H/UOks//e6bf4p05gGrtSN9
+  </data>
+ </layer>
+ <layer id="2" name="вода" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztzzkOgzAURdHfWl4IIbAvMq2ZMYm3kUcRpYjx0N8j3eYJLNsMAAAAAAAAANA7s0adVKvOqnPH+76llJwR22vuEPPQPqiLuqqburvjfci8o+SM2F5zh5jNmz3VS73VqCY1q0Wt/v+blOB/5c4JlX3//wCCNTv/
+  </data>
+ </layer>
+ <layer id="1" name="земля" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlt1Kw0AQhadaW9vYNvVCUUERQe9axHfwF1JBH8BHyVPorY/io3mWMjjGnXY3u+1iyYGPLJPsyc7sT0LUqFGjRvHVAlsK2wnHFaIeyFIPIoJWmYc251Vi6L/Nh7YnLog+z4neNmmvpJSpc+q6tSJ4pFzfk5xoms/HECrO4wV+r3kEQw8VeN9sSR5H4Bi0lfuyFqnPG5f52FPishZ18uA68P5Cu0SsrGEVlIf0qJNHtQ5ol4VnHj77Y0zz9aVhzv+QdRWyLl32x7oUY3+tOw9zdlS/2Tfg2hK3fZO0/yOzJlY89F96HxB9DOI9p4nP2pPI/Tnu6u37fKPlCp1bX23Kf3JfkPr/IkS2PHbQ6IAu2AU90AcZGIKRuOZgDPaVIrSzxX7cln4cs/W5hOcV/T17ZR44h79M7AAcgjv0uwcP4BE8gQLMxFXzlSzy4zb7PYvYbfbTx6gLJmBaGbfGKTgT77eJx+/iy34dfVk4aeQ4fu39thr71IUZBuaxyPsbVLIkqQ==
+  </data>
+ </layer>
+ <layer id="4" name="лестницы" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1ssJgDAMBuD4OOoSuogz6Qg6gt696JzmoNBTSWlKWvk/KHj6zaOCRABlaK0LUNJZFxCh4lO/ZyCavufGtCrI3dwTLb11FfFW7mGL7EMyi9Tz2jn7iMyXzEJjXj4afUgyNN7jozGnHPrAvQrLyPVeuf9ape3D/UcZic6QjNT7uDj7/sH3oSGHfWiQ7FRj7wAAAFCmB6gTJ88=
+  </data>
+ </layer>
+ <layer id="5" name="кувшинки (на них можно стоять)" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt0DsORAAUheF769mfWY1kCsx0xHRjC4SOBXgty+mGRIdE8X/Jn3jlBGYAAAAAAAAAgLXAzZ7+P//puFCh2+vIbq6Nr2+vRQ+zWCXqrT4q1TOZ728c0WqzO2G31kbj2//U670HNapJzarUveqC77irBd5VEPM=
+  </data>
+ </layer>
+</map>
