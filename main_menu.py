@@ -42,34 +42,20 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.stand_l
 
     def sheet(self):
-        self.stand_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_stand.png"),
-                                              (self.rect.width, self.rect.height))
-        self.stand_l = pygame.transform.flip(self.stand_r, True, False)
-
-        self.jump_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_jump.png"),
-                                             (self.rect.width, self.rect.height))
-        self.jump_l = pygame.transform.flip(self.jump_r, True, False)
-
-        self.land_r = pygame.transform.scale(load_image(f"man/p{self.player_id}_hurt.png"),
-                                             (self.rect.width, self.rect.height))
-        self.land_l = pygame.transform.flip(self.land_r, True, False)
-
-        right = [
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk01.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk02.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk03.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk04.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk05.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk06.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk07.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk08.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk09.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk10.png"),
-            load_image(f"man/p{self.player_id}_walk/p{self.player_id}_walk11.png")
-        ]
-
-        self.right = [pygame.transform.scale(image, (self.rect.width, self.rect.height)) for image in right]
-        self.left = [pygame.transform.flip(image, True, False) for image in self.right]
+        images_path = {"dead_image": "ghost.png", "stand_r": f"{self.color}/stand.png",
+                       "jump_r": f"{self.color}/jump.png", "land_r": f"{self.color}/hit.png"}
+        self.images_dict = dict()
+        for key, val in images_path.items():
+            self.images_dict[key] = pygame.transform.scale(load_image(f"{IMAGES_DIR}" + val),
+                                                           (self.rect.width, self.rect.height))
+            if key != "dead_image":
+                self.images_dict[key[:-1] + "l"] = pygame.transform.flip(self.images_dict[key],
+                                                                         True, False)
+        self.images_dict["right"] = [
+            pygame.transform.scale(load_image(f"{IMAGES_DIR}{self.color}/walk{i + 1}.png"),
+                                   (self.rect.width, self.rect.height)) for i in range(2)]
+        self.images_dict["left"] = [pygame.transform.flip(image, True, False) for image in
+                                    self.images_dict["right"]]
 
     def render(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
