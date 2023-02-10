@@ -1,12 +1,11 @@
 import pygame
 import pytmx
-import os
-import sys
 import random
+import sqlite3
+from funcs_backend import pic, load_image
+from consts import *
 
-MAPS_DIR = "maps/"
-MUSIC_DIR = "music/"
-IMAGES_DIR = "images/"
+
 FPS = 60
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1600, 960
 MAP_SIZE = MAP_WIDTH, MAP_HEIGHT = 1600, 960
@@ -16,6 +15,7 @@ tiles_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 gun_group = pygame.sprite.Group()
 health_group = pygame.sprite.Group()
+UPDATED = False
 
 
 def get_tile_properties(tmx_data, x, y, layer):
@@ -390,22 +390,24 @@ class HealthBar(pygame.sprite.Sprite):
 
 
 class Game:
-    def __init__(self, map, hero1, hero2):
+    def __init__(self, map, hero1, hero2, back_btn='back.png'):
         self.map = map
         self.hero1 = hero1
         self.hero2 = hero2
         self.flag = 0
         self.winner = None
         self.loser = None
+        self.back_btn = pic(back_btn, (725, 600))
 
-    def render(self, screen, args):
+    def render(self, screen, args, game_over=False):
         if self.hero1.die_flag + self.hero2.die_flag == 1:
             self.flag += 1
             if not self.winner and not self.loser:
                 self.winner = self.win()
                 self.loser = self.lose()
         self.map.render(screen, 1, 3)
-        self.update_screen(args)
+        if not game_over:
+            self.update_screen(args)
         self.hero1.render(screen)
         self.hero2.render(screen)
         for gun in gun_group:
@@ -429,23 +431,48 @@ class Game:
         self.hero2.update(args, self.map)
         bullet_group.update(self.map)
 
+    def render_end_screen(self, screen, winner_id):
+        global UPDATED
+        bottom = pygame.Surface((1200, 700))
+        bottom.set_alpha(100)
+        bottom.fill((0, 0, 0))
+        screen.blit(bottom, (200, 150))
+
+        title = 'Бой завершен!'
+        winner = f'Победитель: Игрок {winner_id}'
+        prize = (30, 10)
+        loser_id = 2 if winner_id == 1 else 1
+        text = (f'Получено монет у игрока {winner_id}: {prize[0]}', f'Получено монет у игрока {loser_id}: '
+f'{prize[1]}')
+
+        if not UPDATED:
+            con = sqlite3.connect('data/account_info.db')
+            cur = con.cursor()
+            curr_blncs = cur.execute("""SELECT coins FROM info""").fetchall()
+            # winner updating
+            cur.execute("""UPDATE info SET coins = ? WHERE id = ?""",
+                        (prize[0] + curr_blncs[0][0], winner_id,))
+            cur.execute("""UPDATE info SET coins = ? WHERE id = ?""",
+                        (prize[1] + curr_blncs[1][0], loser_id,))
+            con.commit()
+            con.close()
+            UPDATED = True
+
+        font_title_main = pygame.font.Font(FONT, 80)
+        font_title = pygame.font.Font(FONT, 60)
+        font_text = pygame.font.Font(FONT, 40)
+        line = font_title_main.render(title, True, (255, 100, 100))
+        screen.blit(line, (480, 240))
+        line = font_title.render(winner, True, (255, 200, 200))
+        screen.blit(line, (480, 360))
+        line2 = font_text.render(text[0], True, (255, 255, 255))
+        screen.blit(line2, (480, 420))
+        line2 = font_text.render(text[1], True, (255, 255, 255))
+        screen.blit(line2, (480, 460))
+        screen.blit(*self.back_btn)
+
     def game_over(self):
         return not self.flag == 60
-
-
-def load_image(name, colorkey=None):
-    if not os.path.isfile(name):
-        print(f"Файл с изображением '{name}' не найден")
-        sys.exit()
-    image = pygame.image.load(name)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
 
 
 def main():
@@ -461,7 +488,7 @@ def main():
         hero2 = Hero(2, 1570, 20, joy, "green", joystick=joysticks[1])
     else:
         hero1 = Hero(1, 0, 20, joy, "blue")
-        hero2 = Hero(2, 1570, 20, joy, "green")
+        hero2 = Hero(2, 1570, 20, joy, "brown")
     map = Map("map2.tmx", [])
     game = Game(map, hero1, hero2)
 
@@ -470,7 +497,7 @@ def main():
     running = True
     fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (MAP_WIDTH, MAP_HEIGHT))
     pygame.mixer.init()
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'inazuma' + f'{i}.mp3' for i in range(1, 6)]))
+    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'mond' + f'{i}.mp3' for i in range(1, 3)]))
     pygame.mixer.music.play(999)
     pygame.mixer.music.set_volume(0.5)
     while running:
@@ -479,12 +506,28 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+        if hero1.die_flag and hero2.die_flag:
+            running = False
         screen.blit(fon, (0, 0))
         game.render(screen, keys)
         clock.tick(FPS)
         pygame.display.flip()
-
-    """ФИНАЛЬНОЕ ОКНО"""
+    go_back = False
+    pygame.mixer.music.load(MUSIC_DIR + 'victory.mp3')
+    pygame.mixer.music.play()
+    while not go_back and not running:
+        for event in pygame.event.get():
+            mouse = pygame.mouse.get_pos()
+            if event.type == pygame.QUIT:
+                go_back = True
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if game.back_btn[1].collidepoint(*mouse):
+                    go_back = True
+        screen.blit(fon, (0, 0))
+        game.render(screen, {}, game_over=True)
+        game.render_end_screen(screen, game.win())
+        clock.tick(FPS)
+        pygame.display.flip()
     pygame.quit()
 
 
