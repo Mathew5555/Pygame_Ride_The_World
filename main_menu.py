@@ -112,34 +112,39 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys):
         flag = 0
-        if self.button(keys, "left") and self.rect.x >= 10:
-            self.rect.x -= 10
-            self.cur_frame = (self.cur_frame + 1) % len(self.left)
-            self.image = self.left[self.cur_frame]
-        if self.button(keys, "right") and self.rect.x <= 1440:
-            self.rect.x += 10
-            self.cur_frame = (self.cur_frame + 1) % len(self.right)
-            self.image = self.right[self.cur_frame]
+        if self.button(keys, "left"):
+            self.rect.x -= self.speed_x
+            self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["left"])
+            self.image = self.images_dict["left"][self.cur_frame]
+            flag = 1
+            self.direction = "left"
+        if self.button(keys, "right"):
+            self.rect.x += self.speed_x
+            self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["right"])
+            self.image = self.images_dict["right"][self.cur_frame]
+            flag = 1
+            self.direction = "right"
         if self.button(keys, "up") and not self.jump_frame:
-            self.jump_frame = 20
+            self.jump_frame = 30
             flag = 1
             if self.direction == "left":
-                self.image = self.jump_l
+                self.image = self.images_dict["jump_l"]
             else:
-                self.image = self.jump_r
-        if self.button(keys, "down"):
-            self.jump_frame = 0
-        if not flag:
+                self.image = self.images_dict["jump_r"]
+        if not flag and not self.jump_frame:
             if self.direction == "left":
-                self.image = self.stand_l
+                self.image = self.images_dict["stand_l"]
             else:
-                self.image = self.stand_r
+                self.image = self.images_dict["stand_r"]
+        if self.jump_frame > 0:
+            self.rect.y -= 10
+            self.jump_frame -= 10
         if not pygame.sprite.spritecollideany(self, PLATFORMS):
-            if self.jump_frame > 0:
-                self.rect.y -= 10
-                self.jump_frame -= 10
+            self.rect.y += self.speed_y
+            if self.direction == "left":
+                self.image = self.images_dict["land_l"]
             else:
-                self.rect.y += 10
+                self.image = self.images_dict["land_r"]
 
 
 class Platform(pygame.sprite.Sprite):
