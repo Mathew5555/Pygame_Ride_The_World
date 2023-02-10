@@ -267,11 +267,11 @@ def main():
         for el in joysticks:
             el.init()
         print(joysticks)
-        hero1 = Hero(1, 0, 20, joy, joystick=joysticks[0])
-        hero2 = Hero(2, 1570, 20, joy, joystick=joysticks[1])
+        hero1 = Hero(1, 0, 20, 'pink', joy, joystick=joysticks[0])
+        hero2 = Hero(2, 1570, 20, 'brown', joy, joystick=joysticks[1])
     else:
-        hero1 = Hero(1, 0, 20, joy)
-        hero2 = Hero(2, 1570, 20, joy)
+        hero1 = Hero(1, 0, 20, 'pink', joy)
+        hero2 = Hero(2, 1570, 20, 'brown', joy)
     menu = Menu(hero1, hero2)
     pygame.display.set_mode(WINDOW_SIZE)
     play()
