@@ -8,7 +8,6 @@ from guide_window import guide
 from wardrobe_window import wb
 from account_info_window import acc
 
-
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
 clock = pygame.time.Clock()
@@ -112,39 +111,48 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys):
         flag = 0
+        flag_collide = pygame.sprite.spritecollideany(self, PLATFORMS)
         if self.button(keys, "left"):
             self.rect.x -= self.speed_x
-            self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["left"])
-            self.image = self.images_dict["left"][self.cur_frame]
+            if flag_collide:
+                self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["left"])
+                self.image = self.images_dict["left"][self.cur_frame]
             flag = 1
             self.direction = "left"
         if self.button(keys, "right"):
             self.rect.x += self.speed_x
-            self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["right"])
-            self.image = self.images_dict["right"][self.cur_frame]
+            if flag_collide:
+                self.cur_frame = (self.cur_frame + 1) % len(self.images_dict["right"])
+                self.image = self.images_dict["right"][self.cur_frame]
             flag = 1
             self.direction = "right"
-        if self.button(keys, "up") and not self.jump_frame:
-            self.jump_frame = 30
+        if self.button(keys, "up") and flag_collide:
+            self.jump_frame = 20
             flag = 1
             if self.direction == "left":
                 self.image = self.images_dict["jump_l"]
             else:
                 self.image = self.images_dict["jump_r"]
-        if not flag and not self.jump_frame:
+        if not flag_collide and not self.jump_frame:
+            self.rect.y += self.speed_y
+            if self.direction == "left":
+                self.image = self.images_dict["land_l"]
+            else:
+                self.image = self.images_dict["land_r"]
+        elif not flag and not self.jump_frame:
             if self.direction == "left":
                 self.image = self.images_dict["stand_l"]
             else:
                 self.image = self.images_dict["stand_r"]
         if self.jump_frame > 0:
             self.rect.y -= 10
-            self.jump_frame -= 10
-        if not pygame.sprite.spritecollideany(self, PLATFORMS):
-            self.rect.y += self.speed_y
-            if self.direction == "left":
-                self.image = self.images_dict["land_l"]
-            else:
-                self.image = self.images_dict["land_r"]
+            self.jump_frame -= 2
+        # if not pygame.sprite.spritecollideany(self, PLATFORMS) and not self.jump_frame:
+        #     self.rect.y += self.speed_y
+        #     if self.direction == "left" :
+        #         self.image = self.images_dict["land_l"]
+        #     else:
+        #         self.image = self.images_dict["land_r"]
 
 
 class Platform(pygame.sprite.Sprite):
@@ -229,7 +237,7 @@ class Menu:
 
     def both_checked(self):
         return self.check_mark1[1] != (-400, -400, 40, 40) and \
-               self.check_mark2[1] != (-400, -400, 40, 40)
+            self.check_mark2[1] != (-400, -400, 40, 40)
 
     def open_info(self):
         info()
