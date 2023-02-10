@@ -19,13 +19,15 @@ player_group = pygame.sprite.Group()
 
 
 class Hero(pygame.sprite.Sprite):
-    def __init__(self, player_id, x, y, joy, joystick=None):
+    def __init__(self, player_id, x, y, color, joy, joystick=None):
         super().__init__(player_group, all_sprites)
         self.player_id = player_id
         self.joy = joy
         self.joystick = joystick
 
         self.gravity = 1
+        self.speed_x = 3
+        self.speed_y = 6
         self.fly = 0
 
         self.cur_frame = 0
@@ -33,16 +35,17 @@ class Hero(pygame.sprite.Sprite):
 
         self.rect = pygame.Rect(x, y, 56, 80)
 
+        self.color = color
         self.sheet()
         if self.player_id == 1:
             self.direction = "right"
-            self.image = self.stand_r
+            self.image = self.images_dict["stand_r"]
         else:
             self.direction = "left"
-            self.image = self.stand_l
+            self.image = self.images_dict["stand_l"]
 
     def sheet(self):
-        images_path = {"dead_image": "ghost.png", "stand_r": f"{self.color}/stand.png",
+        images_path = {"stand_r": f"{self.color}/stand.png",
                        "jump_r": f"{self.color}/jump.png", "land_r": f"{self.color}/hit.png"}
         self.images_dict = dict()
         for key, val in images_path.items():
