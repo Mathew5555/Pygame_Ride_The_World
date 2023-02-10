@@ -164,7 +164,7 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys, game_map):
         map_flag = 0
-        if MAP_NAME == "map_2.tmx":
+        if MAP_NAME == "map_2.tmx" or MAP_NAME == "map3.tmx":
             map_flag = 2
         flag = 0
         if self.button(keys, "left"):
@@ -198,12 +198,17 @@ class Hero(pygame.sprite.Sprite):
                 self.gun.update(0, 0, flag=-1)
             self.direction = "right"
         if self.direction == "right":
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], map_flag)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3,
+                                              map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1],
+                                               map_flag)
         else:
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, map_flag)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
-        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, map_flag + 2)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3,
+                                              map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3,
+                                               map_flag)
+        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3,
+                                           map_flag + 2)
         if self.button(keys, "up"):
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
@@ -300,9 +305,10 @@ class Hero(pygame.sprite.Sprite):
             self.fire_flag -= 1
 
     def hill(self, game_map):
-        hill_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.centery, 1)
-        if hill_check["hill"] == 1 and self.health < self.health_bar.max_health:
-            self.health += 0.3
+        if not MAP_NAME == "map_2.tmx":
+            hill_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.centery, 1)
+            if hill_check["hill"] == 1 and self.health < self.health_bar.max_health:
+                self.health += 0.3
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -319,7 +325,7 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self, map):
         map_flag = 0
-        if MAP_NAME == "map_2.tmx":
+        if MAP_NAME == "map_2.tmx" or MAP_NAME == "map3.tmx":
             map_flag = 2
         if self.direction == "left":
             left_tile = get_tile_properties(map.map, self.rect.midleft[0] - 3, self.rect.bottomleft[1], map_flag)
@@ -425,6 +431,8 @@ class Game:
                 self.loser = self.lose()
         if MAP_NAME == "map_2.tmx":
             self.map.render(screen, 1, 2, 3, 4, 5, 6)
+        elif MAP_NAME == "map3.tmx":
+            self.map.render(screen, 1, 2, 3, 4, 5, 6, 7)
         else:
             self.map.render(screen, 1, 3)
         if not game_over:
@@ -499,7 +507,7 @@ class Game:
 
 def main():
     global MAP_NAME
-    MAP_NAME = "map_2.tmx"
+    MAP_NAME = "map3.tmx"
     joy = False
     screen = pygame.display.set_mode(WINDOW_SIZE)
     pygame.init()
