@@ -261,10 +261,10 @@ class Hero(pygame.sprite.Sprite):
             if self.rect.right < 0:
                 self.rect.x = 0
                 self.die()
-            elif self.rect.left > WINDOW_WIDTH:
-                self.rect.x = WINDOW_WIDTH - self.rect.width
+            elif self.rect.left > WINDOW_WIDTH2:
+                self.rect.x = WINDOW_WIDTH2 - self.rect.width
                 self.die()
-            elif self.rect.bottom > WINDOW_HEIGHT:
+            elif self.rect.bottom > WINDOW_HEIGHT2:
                 self.die()
         else:
             self.die()
@@ -331,7 +331,7 @@ class Bullet(pygame.sprite.Sprite):
             if right_tile["solid"]:
                 self.kill()
             self.rect.x += self.speed
-        if self.rect.left < 0 or self.rect.right > WINDOW_WIDTH:
+        if self.rect.left < 0 or self.rect.right > WINDOW_WIDTH2:
             self.kill()
         for player in player_group:
             if pygame.sprite.collide_mask(self, player):
@@ -497,50 +497,53 @@ class Game:
         return not self.flag == 60
 
 
-def main():
+def game(clr1, clr2):
     global MAP_NAME
-    MAP_NAME = "map_2.tmx"
+    MAP_NAME = "map2.tmx"
     joy = False
-    screen = pygame.display.set_mode(WINDOW_SIZE)
+    screen = pygame.display.set_mode(WINDOW_SIZE2)
     pygame.init()
     if joy:
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         for el in joysticks:
             el.init()
-        hero1 = Hero(1, 0, 20, joy, "blue", joystick=joysticks[0])
-        hero2 = Hero(2, 1570, 20, joy, "green", joystick=joysticks[1])
+        hero1 = Hero(1, 0, 20, joy, clr1, joystick=joysticks[0])
+        hero2 = Hero(2, 1570, 20, joy, clr2, joystick=joysticks[1])
     else:
-        hero1 = Hero(1, 0, 20, joy, "blue")
-        hero2 = Hero(2, 1570, 20, joy, "yellow")
+        hero1 = Hero(1, 0, 20, joy, clr1)
+        hero2 = Hero(2, 1550, 20, joy, clr2)
     map = Map(MAP_NAME, [])
     game = Game(map, hero1, hero2)
 
     clock = pygame.time.Clock()
 
     running = True
-    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (WINDOW_WIDTH, WINDOW_HEIGHT))
+    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (WINDOW_WIDTH2, WINDOW_HEIGHT2))
     pygame.mixer.init()
     pygame.mixer.music.load(random.choice([MUSIC_DIR + 'mond' + f'{i}.mp3' for i in range(1, 3)]))
     pygame.mixer.music.play(999)
-    pygame.mixer.music.set_volume(0.5)
+    sound_level = float(
+        open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
+    pygame.mixer.music.set_volume(sound_level)
+    flag_closed = False
     while running:
         screen.fill((0, 0, 0))
         running = game.game_over()
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                flag_closed = True
         if hero1.die_flag and hero2.die_flag:
             running = False
-
         screen.blit(fon, (0, 0))
         game.render(screen, keys)
         clock.tick(FPS)
         pygame.display.flip()
+
     go_back = False
     pygame.mixer.music.load(MUSIC_DIR + 'victory.mp3')
     pygame.mixer.music.play()
-    while not go_back and not running:
+    while not go_back and not running and not flag_closed:
         for event in pygame.event.get():
             mouse = pygame.mouse.get_pos()
             if event.type == pygame.QUIT:
@@ -553,8 +556,8 @@ def main():
         game.render_end_screen(screen, game.win())
         clock.tick(FPS2)
         pygame.display.flip()
-    pygame.quit()
+    pygame.mixer.music.stop()
 
 
 if __name__ == '__main__':
-    main()
+    game('blue', 'yellow')

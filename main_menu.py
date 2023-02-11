@@ -8,6 +8,8 @@ from settings_window import settings
 from guide_window import guide
 from wardrobe_window import wb
 from account_info_window import acc
+from playing_mode import game
+
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -252,6 +254,9 @@ class Menu:
     def open_settings(self):
         settings()
 
+    def start_game(self):
+        game(self.hero1.color, self.hero2.color)
+
 
 def time_to_game(menu, timer):
     if menu.both_checked():
@@ -261,6 +266,12 @@ def time_to_game(menu, timer):
         screen.blit(*menu.cd[max(3 - int(timer / 1000), 0)])
         if timer < 3000:
             screen.blit(*menu.effects[max((timer % 1000) // 83, 1)])
+        if timer > 4000:
+            timer = 0
+            menu.update(menu.btn_start1)
+            menu.update(menu.btn_start2)
+            menu.start_game()
+            pygame.display.set_mode(WINDOW_SIZE)
     else:
         timer = 0
         clock.tick(FPS)
@@ -313,9 +324,7 @@ def main():
                 if menu.btn_guide[1].collidepoint(*mouse):
                     menu.open_guide()
                 if menu.btn_wb[1].collidepoint(*mouse):
-                    print(2)
                     menu.open_wb()
-                    print(1)
                     res = cur.execute("""SELECT curr_skin FROM info""").fetchall()
                     hero1.color = res[0][0]
                     hero1.sheet()
