@@ -13,6 +13,7 @@ from playing_mode import game
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption('Ride The World - BETA 1.0')
 clock = pygame.time.Clock()
 RUNNING = True
 PLATFORMS = pygame.sprite.Group()
@@ -280,7 +281,7 @@ def time_to_game(menu, timer):
 
 def main():
     global RUNNING
-    joy = False
+    joy = True
     con = sqlite3.connect('data/account_info.db')
     cur = con.cursor()
     res = cur.execute("""SELECT curr_skin FROM info""").fetchall()

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.9" tiledversion="1.9.2" name="Tiles" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="110" columns="10">
- <image source="../tiles/Tiles.png" width="352" height="384"/>
+<tileset version="1.9" tiledversion="1.9.2" name="Tiles" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="144" columns="12">
+ <image source="Tiles.png" width="400" height="400"/>
  <wangsets>
   <wangset name="Безымянный набор" type="mixed" tile="-1">
    <wangcolor name="" color="#ff0000" tile="-1" probability="1"/>

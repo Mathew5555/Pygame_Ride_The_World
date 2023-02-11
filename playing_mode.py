@@ -5,6 +5,7 @@ import sqlite3
 from funcs_backend import pic, load_image
 from consts import *
 
+
 all_sprites = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
@@ -422,6 +423,8 @@ class Game:
     def render(self, screen, args, game_over=False):
         if self.hero1.die_flag + self.hero2.die_flag == 1:
             self.flag += 1
+            self.hero1.gun.kill()
+            self.hero2.gun.kill()
             if not self.winner and not self.loser:
                 self.winner = self.win()
                 self.loser = self.lose()
@@ -503,10 +506,12 @@ class Game:
 
 def game(clr1, clr2):
     global MAP_NAME
-    MAP_NAME = "map2.tmx"
-    joy = False
-    screen = pygame.display.set_mode(WINDOW_SIZE2)
+    MAP_NAME = random.choice(["map2.tmx"])
+    joy = True
     pygame.init()
+    screen = pygame.display.set_mode(WINDOW_SIZE2)
+    pygame.display.set_caption('Ride The World - BETA 1.0')
+    pygame.display.flip()
     if joy:
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         for el in joysticks:
@@ -537,6 +542,8 @@ def game(clr1, clr2):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 flag_closed = True
+                running = False
+                break
         if hero1.die_flag and hero2.die_flag:
             running = False
         screen.blit(fon, (0, 0))
