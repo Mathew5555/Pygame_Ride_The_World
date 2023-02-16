@@ -22,26 +22,27 @@ def renew_db(players_money, tovar, flag, id):
     cur = con.cursor()
     if flag:
         bought_s1 = cur.execute(
-            f'''SELECT skins FROM info where id = {id}''').fetchall()
-
+            f'''SELECT skins FROM info where id = "{id}"''').fetchall()
+        str1 = ''
         for el in bought_s1:
-            bought_skins = el[0]
-        bought_skins = bought_skins + f'images/{tovar}'
+            str1 = str1 + el
+        str1 = str1 + f'images/{tovar}'
         cur.execute(f"""UPDATE info
-            SET skins = '{bought_skins}'
-            WHERE id = {id}""")
+            SET skins = '{str1}'
+            WHERE id = '{id}'""")
     else:
-        bought_b1 = cur.execute(
-            f'''SELECT boosts FROM info where id = {id}''').fetchall()
-        for el in bought_b1:
-            bought_boosts = el[0]
-        bought_boosts = bought_boosts + tovar
+        bought_s1 = cur.execute(
+            f'''SELECT skins FROM info where id = "{id}"''').fetchall()
+        str1 = ''
+        for el in bought_s1:
+            str1 = str1 + el
+        str1 = str1 + f'images/{tovar}'
         cur.execute(f"""UPDATE info
-                    SET boosts = '{bought_boosts}'
-                    WHERE id = {id}""")
+                    SET boosts = '{str1}'
+                    WHERE id = '{id}'""")
     cur.execute(f"""UPDATE info
     SET coins = '{str(players_money)}'
-    WHERE id = {id}""")
+    WHERE id = '{id}'""")
     con.commit()
 
 def id(id):
@@ -409,6 +410,7 @@ while running:
                         else: #если покупают бусты
                             tovar = boosts_photo[0]
                         renew_db(players_money, tovar, flag, id)
+                        new(mainlist, maintext, maincost, main_bought)
 
             if buy2 != 0 and buy2.rect.collidepoint(x, y):
                 if not main_bought[1]:  # если товар возможно купить
@@ -420,6 +422,7 @@ while running:
                         else:  # если покупают бусты
                             tovar = boosts_photo[1]
                         renew_db(players_money, tovar, flag, id)
+                        new(mainlist, maintext, maincost, main_bought)
 
             if buy3 != 0 and buy3.rect.collidepoint(x, y):
                 if not main_bought[2]:  # если товар возможно купить
@@ -431,6 +434,7 @@ while running:
                         else:  # если покупают бусты
                             tovar = boosts_photo[2]
                         renew_db(players_money, tovar, flag, id)
+                        new(mainlist, maintext, maincost, main_bought)
 
 
             if buy4 != 0 and buy4.rect.collidepoint(x, y):
@@ -443,13 +447,14 @@ while running:
                         else:  # если покупают бусты
                             tovar = boosts_photo[3]
                         renew_db(players_money, tovar, flag, id)
+                        new(mainlist, maintext, maincost, main_bought)
 
             if first.rect.collidepoint(x, y):
                 id = 1
-                id(1)
+                id('1')
             if second.rect.collidepoint(x, y):
                 id = 2
-                id(2)
+                id('2')
 
 
 
