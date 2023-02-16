@@ -45,7 +45,7 @@ def renew_db(players_money, tovar, flag, id):
     WHERE id = '{id}'""")
     con.commit()
 
-def id(id):
+def id_new(id):
     global cost_boosts, cost_skins, sold_skins, sold_boosts, players_money
     # подключение бд
     con = sqlite3.connect('account_info.db')
@@ -68,7 +68,7 @@ def id(id):
 
     # купленные скины
     bought_s = cur.execute(
-        f'''SELECT skins FROM info where id = {id}''').fetchall()
+        f'''SELECT skins FROM info where id = "{id}"''').fetchall()
     bought_skins = ''
     for el in bought_s:
         bought_skins = el[0]
@@ -84,7 +84,7 @@ def id(id):
 
     # деньги игрока
     players_m = cur.execute(
-        f'''SELECT coins FROM info where id = {id}''').fetchall()
+        f'''SELECT coins FROM info where id = "{id}"''').fetchall()
     for el in players_m:
         if el[0]:
             players_money = int(el[0])
@@ -333,7 +333,7 @@ text_boosts = ['+1 урон', '+5% speed', '+2 ХП', '2x очки', '3x очк�
 text_skins = ['beige skin', 'blue skin', 'green skin', 'pink skin', 'yellow skin']
 flag = 1
 
-id(1)
+id_new(1)
 
 itemsgrp = pygame.sprite.Group()
 
@@ -451,10 +451,10 @@ while running:
 
             if first.rect.collidepoint(x, y):
                 id = 1
-                id('1')
+                id_new(1)
             if second.rect.collidepoint(x, y):
                 id = 2
-                id('2')
+                id_new(2)
 
 
 
