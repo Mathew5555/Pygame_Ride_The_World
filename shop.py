@@ -29,13 +29,13 @@ class Shop:
 
     def render(self, screen):
         create_and_blit_surface(screen, -50, 250, (1600, 500), (0, 200, 200), 50)
-        create_and_blit_surface(screen, 40, 90, (1100, 150), (0, 0, 0), 150)
+        create_and_blit_surface(screen, 40, 90, (1200, 150), (0, 0, 0), 150)
 
         render_and_blit_text(screen, 45, 'Примечание:', 50, 90, (255, 0, 0))
         render_and_blit_text(screen, 25, 'Это не магазин, который был запланирован. Это "сырая" версия его.', 50, 140, (255, 255, 255))
         render_and_blit_text(screen, 25, 'Член команды не доделал магазин к сроку сдачи, поэтому пришлось делать', 50, 160, (255, 255, 255))
         render_and_blit_text(screen, 25, 'наспех то, что должно было быть для работы игры. Из-за этого все скины', 50, 180, (255, 255, 255))
-        render_and_blit_text(screen, 25, 'доступны сразу, а буст на игру можно выбрать бесплатно.', 50, 200, (255, 255, 255))
+        render_and_blit_text(screen, 25, 'доступны сразу, а буст на игру можно выбрать бесплатно. См. ветку feature/store', 50, 200, (255, 255, 255))
 
         if self.curr_pl == 1:
             x, y = 1275, 15
