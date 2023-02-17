@@ -19,7 +19,7 @@ if __name__ == '__main__':
         joy = False
 
     pygame.init()
-    pygame.display.set_caption('Ride The World - BETA 1.0')
+    pygame.display.set_caption('Ride The World - ver 1.0')
     screen = pygame.display.set_mode(WINDOW_SIZE)
     clock = pygame.time.Clock()
     pygame.mixer.music.load('music/hello.mp3')

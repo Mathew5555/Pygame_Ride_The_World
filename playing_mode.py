@@ -85,7 +85,6 @@ class Hero(pygame.sprite.Sprite):
         cur = con.cursor()
         res = cur.execute(f"""SELECT boosts FROM info WHERE id = {self.player_id}""").fetchall()[0][0]
         con.close()
-        print(res)
         if 'gun' in res:
             self.gun_coeff = for_game[res]
         elif 'health' in res:
@@ -589,4 +588,4 @@ def game(clr1, clr2, joy):
 
 
 if __name__ == '__main__':
-    game('blue', 'yellow')
+    game('blue', 'yellow', False)

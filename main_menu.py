@@ -13,7 +13,7 @@ from shop import shop
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
-pygame.display.set_caption('Ride The World - BETA 1.0')
+pygame.display.set_caption('Ride The World - ver 1.0')
 clock = pygame.time.Clock()
 RUNNING = True
 PLATFORMS = pygame.sprite.Group()
@@ -260,7 +260,7 @@ class Menu:
         game(self.hero1.color, self.hero2.color, joy)
 
 
-def time_to_game(menu, timer):
+def time_to_game(menu, timer, joy):
     if menu.both_checked():
         timer += clock.tick(FPS)
         if timer < 3000:
@@ -272,7 +272,7 @@ def time_to_game(menu, timer):
             timer = 0
             menu.update(menu.btn_start1)
             menu.update(menu.btn_start2)
-            menu.start_game()
+            menu.start_game(joy)
             pygame.display.set_mode(WINDOW_SIZE)
     else:
         timer = 0
@@ -343,7 +343,7 @@ def main(joy):
         sound_level = float(
             open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
         check_busy(sound_level)
-        timer = time_to_game(menu, timer)
+        timer = time_to_game(menu, timer, joy)
         menu.render(screen)
         hero1.move(keys)
         hero2.move(keys)
@@ -359,4 +359,4 @@ def main(joy):
 
 
 if __name__ == '__main__':
-    main()
+    main(False)

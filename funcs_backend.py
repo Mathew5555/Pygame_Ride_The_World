@@ -50,6 +50,7 @@ def split_animated_gif(gif_file_path, screen=None):
                     screen.blit(text1, (600 + i * 50, 100))
                 screen.blit(text, (100, 100))
                 screen.blit(*pic('our_logo.png', (50, 500), add=(300, 300)))
+                render_and_blit_text(screen, 30, 'Убедитесь, что у вас включена английская раскладка!', 100, 300, (255, 255, 255))
                 pygame.display.flip()
                 total += 1
     else:
