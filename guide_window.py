@@ -25,17 +25,12 @@ class Guide:
             titles += 1
             plus += 20
             clr = (255, 80, 255)
-        font = pygame.font.Font(FONT, size)
-        line = font.render(line, True, clr)
-        screen.blit(line, (otst, curr))
+        render_and_blit_text(screen, size, line, otst, curr, clr)
         return titles, plus
 
     def render(self, screen):
-        bottom = pygame.Surface((700, 800))
-        bottom.set_alpha(100)
-        bottom.fill((0, 0, 0))
-        screen.blit(bottom, (30, 100))
-        screen.blit(bottom, (770, 100))
+        create_and_blit_surface(screen, 30, 100, (700, 800), (0, 0, 0), 100)
+        create_and_blit_surface(screen, 770, 100, (700, 800), (0, 0, 0), 100)
 
         text1 = [('Управление', 'title'),
                  'Для управления используйте клавиши',

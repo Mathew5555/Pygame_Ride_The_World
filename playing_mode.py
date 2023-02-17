@@ -523,10 +523,9 @@ class Game:
         return not self.flag == 60
 
 
-def game(clr1, clr2):
+def game(clr1, clr2, joy):
     global MAP_NAME
     MAP_NAME = random.choice(["map2.tmx"])
-    joy = False
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE2)
     pygame.display.set_caption('Ride The World - BETA 1.0')

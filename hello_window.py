@@ -33,25 +33,15 @@ if __name__ == '__main__':
         if ind >= len(FON):
             ind = 0
         screen.blit(FON[ind], (0, 0))
-        font = pygame.font.Font(FONT, 50)
-        text = font.render('Нажмите любую клавишу, чтобы продолжить', True, (255, 255, 255))
-        text_x = 100
-        text_y = 800
-        screen.blit(text, (text_x, text_y))
+        render_and_blit_text(screen, 50, 'Нажмите любую клавишу, чтобы продолжить', 100, 800, (255, 255, 255))
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
                 running = False
-                """font = pygame.font.Font(FONT, 80)
-                text = font.render('Загрузка...', True, (255, 255, 255))
-                text_x = 600
-                text_y = 700
-                screen.blit(text, (text_x, text_y))
-                pygame.display.flip()"""
                 pygame.mixer.music.unload()
-                main()
+                main(joy)
                 break
         clock.tick(FPS2)
         ind += 1

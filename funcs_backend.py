@@ -10,7 +10,6 @@ pygame.mixer.init()
 sound = pygame.mixer.Sound('data/mouse.mp3')
 sound.set_volume(0.4)
 
-
 def load_image(name, colorkey=None):
     # если файл не существует, то выходим
     if not os.path.isfile(name):
@@ -96,3 +95,16 @@ def check_busy(sound_level):
         pygame.mixer.music.set_volume(sound_level)
         file2.write(f'{sound_level}\n{data[1]}')
         file2.close()
+
+
+def create_and_blit_surface(screen, x, y, size, color, alpha):
+    bottom = pygame.Surface(size)
+    bottom.set_alpha(alpha)
+    bottom.fill(color)
+    screen.blit(bottom, (x, y))
+
+
+def render_and_blit_text(screen, size, text, x, y, color):
+    font = pygame.font.Font(FONT, size)
+    line = font.render(text, True, color)
+    screen.blit(line, (x, y))

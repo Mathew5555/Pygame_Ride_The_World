@@ -1,4 +1,3 @@
-import random
 from funcs_backend import *
 import pygame
 import sqlite3
@@ -257,8 +256,8 @@ class Menu:
     def open_settings(self):
         settings()
 
-    def start_game(self):
-        game(self.hero1.color, self.hero2.color)
+    def start_game(self, joy):
+        game(self.hero1.color, self.hero2.color, joy)
 
 
 def time_to_game(menu, timer):
@@ -281,9 +280,8 @@ def time_to_game(menu, timer):
     return timer
 
 
-def main():
+def main(joy):
     global RUNNING
-    joy = False
     con = sqlite3.connect('data/account_info.db')
     cur = con.cursor()
     res = cur.execute("""SELECT curr_skin FROM info""").fetchall()
@@ -291,7 +289,6 @@ def main():
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
         for el in joysticks:
             el.init()
-        print(joysticks)
         hero1 = Hero(1, 250, 20, res[0][0], joy, joystick=joysticks[0])
         hero2 = Hero(2, 1200, 20, res[1][0], joy, joystick=joysticks[1])
     else:

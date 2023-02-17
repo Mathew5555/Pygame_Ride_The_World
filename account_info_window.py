@@ -24,32 +24,19 @@ class Account:
     def render(self, screen):
         x = 750
         screen.blit(*self.btn_back)
-        bottom = pygame.Surface((690, 840))
-        bottom.set_alpha(150)
-        bottom.fill((0, 0, 0))
-        screen.blit(bottom, (30, 130))
-        screen.blit(bottom, (x + 30, 130))
+        create_and_blit_surface(screen, 30, 130, (690, 840), (0, 0, 0), 150)
+        create_and_blit_surface(screen, x + 30, 130, (690, 840), (0, 0, 0), 150)
 
         screen.blit(*pic(self.im1 + '/stand.png', (50, 150), add=(150, 150)))
         screen.blit(*pic(self.im2 + '/stand.png', (50 + x, 150), add=(150, 150)))
         t = len(self.info[0]) - 1
         text = ['ID', 'Уровень игрока:', 'Баланс монет:', 'Кол-во убийств:', 'Лучший результат:']
         for i in range(t):
-            font = pygame.font.Font(FONT, 40)
-            line = font.render(text[i], True, (255, 255, 255))
-            screen.blit(line, (50, 320 + i * 120))
+            render_and_blit_text(screen, 40, text[i], 50, 320 + i * 120, (255, 255, 255))
+            render_and_blit_text(screen, 60, str(self.info[0][i]), 50, 360 + i * 120, self.clr)
 
-            font = pygame.font.Font(FONT, 60)
-            line = font.render(str(self.info[0][i]), True, self.clr)
-            screen.blit(line, (50, 360 + i * 120))
-        for i in range(t):
-            font = pygame.font.Font(FONT, 40)
-            line = font.render(text[i], True, (255, 255, 255))
-            screen.blit(line, (50 + x, 320 + i * 120))
-
-            font = pygame.font.Font(FONT, 60)
-            line = font.render(str(self.info[1][i]), True, self.clr)
-            screen.blit(line, (50 + x, 360 + i * 120))
+            render_and_blit_text(screen, 40, text[i], 50 + x, 320 + i * 120, (255, 255, 255))
+            render_and_blit_text(screen, 60, str(self.info[1][i]), 50 + x, 360 + i * 120, self.clr)
 
     def back(self):
         global RUNNING

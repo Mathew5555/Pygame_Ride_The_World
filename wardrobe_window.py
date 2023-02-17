@@ -29,30 +29,20 @@ class Wardrobe:
         self.btn_right = pic(right, (1100, 875), add=(100, 100))
         self.btn_pick = pic(ok, (700, 875), add=(100, 100))
 
-        self.font = pygame.font.Font(FONT, 45)
-
     def render(self, screen):
-        bottom = pygame.Surface((1600, 500))
-        bottom.set_alpha(50)
-        bottom.fill((255, 0, 255))
-        screen.blit(bottom, (-50, 250))
+        create_and_blit_surface(screen, -50, 250, (1600, 500), (255, 0, 255), 50)
 
         if self.curr_pl == 1:
             x, y = 1275, 15
         else:
             x, y = 1275, 75
         size = 210, 60
-        bottom = pygame.Surface(size)
-        bottom.set_alpha(100)
-        bottom.fill((0, 255, 0))
-        screen.blit(bottom, (x, y))
+        create_and_blit_surface(screen, x, y, size, (0, 255, 0), 100)
 
         screen.blit(*self.bottom1)
         screen.blit(*self.bottom2)
-        line = self.font.render('Игрок 1', True, (255, 255, 255))
-        screen.blit(line, (1292, 17))
-        line = self.font.render('Игрок 2', True, (255, 255, 255))
-        screen.blit(line, (1292, 77))
+        render_and_blit_text(screen, 45, 'Игрок 1', 1292, 17, (255, 255, 255))
+        render_and_blit_text(screen, 45, 'Игрок 2', 1292, 77, (255, 255, 255))
         screen.blit(*self.btn_back)
         screen.blit(*self.btn_right)
         screen.blit(*self.btn_left)
@@ -66,8 +56,7 @@ class Wardrobe:
                 k = (i + len(self.player1) + 1) % len(self.player1)
                 if k == 0:
                     k = len(self.player1)
-                line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
-                screen.blit(line, (200 + cnt * 400 + 50, 700))
+                render_and_blit_text(screen, 45, f'Костюм {k}', 200 + cnt * 400 + 50, 700, (255, 255, 255))
             except Exception:
                 cnt += 1
                 continue
@@ -81,8 +70,7 @@ class Wardrobe:
                 k = (i + len(self.player2) + 1) % len(self.player2)
                 if k == 0:
                     k = len(self.player2)
-                line = self.font.render(f'Костюм {k}', True, (255, 255, 255))
-                screen.blit(line, (200 + cnt * 400 + 50, 700))
+                render_and_blit_text(screen, 45, f'Костюм {k}', 200 + cnt * 400 + 50, 700, (255, 255, 255))
             except Exception:
                 cnt += 1
                 continue

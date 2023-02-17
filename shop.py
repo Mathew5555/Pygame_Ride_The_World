@@ -19,7 +19,6 @@ class Shop:
         self.bottom1 = pic(bottom, (1280, 20), add=(200, 50))
         self.bottom2 = pic(bottom, (1280, 80), add=(200, 50))
         self.boosts = self.cur.execute("SELECT boost_dir, description FROM boosts").fetchall()
-        print(self.boosts)
         self.maxx1 = len(self.boosts) * 5
         self.ind = 0
         self.curr_pl = 1
@@ -28,53 +27,27 @@ class Shop:
         self.btn_right = pic(right, (1100, 875), add=(100, 100))
         self.btn_pick = pic(ok, (700, 875), add=(100, 100))
 
-        self.font = pygame.font.Font(FONT, 35)
-        self.font0 = pygame.font.Font(FONT, 45)
-        self.font1 = pygame.font.Font(FONT, 25)
-
     def render(self, screen):
-        bottom = pygame.Surface((1600, 500))
-        bottom.set_alpha(50)
-        bottom.fill((0, 200, 200))
-        screen.blit(bottom, (-50, 250))
+        create_and_blit_surface(screen, -50, 250, (1600, 500), (0, 200, 200), 50)
+        create_and_blit_surface(screen, 40, 90, (1100, 150), (0, 0, 0), 150)
 
-        bottom = pygame.Surface((1100, 150))
-        bottom.set_alpha(150)
-        bottom.fill((0, 0, 0))
-        screen.blit(bottom, (40, 90))
-        line = self.font0.render('Примечание:', True, (255, 0, 0))
-        screen.blit(line, (50, 90))
-        line = self.font1.render('Это не магазин, который был запланирован. Это "сырая" версия его.', True, (255, 255, 255))
-        screen.blit(line, (50, 140))
-        line = self.font1.render(
-            'Член команды не доделал магазин к сроку сдачи, поэтому пришлось делать',
-                                True, (255, 255, 255))
-        screen.blit(line, (50, 160))
-        line = self.font1.render(
-            'наспех то, что должно было быть для работы игры. Из-за этого все скины',
-            True, (255, 255, 255))
-        screen.blit(line, (50, 180))
-        line = self.font1.render(
-            'доступны сразу, а буст на игру можно выбрать бесплатно.',
-            True, (255, 255, 255))
-        screen.blit(line, (50, 200))
+        render_and_blit_text(screen, 45, 'Примечание:', 50, 90, (255, 0, 0))
+        render_and_blit_text(screen, 25, 'Это не магазин, который был запланирован. Это "сырая" версия его.', 50, 140, (255, 255, 255))
+        render_and_blit_text(screen, 25, 'Член команды не доделал магазин к сроку сдачи, поэтому пришлось делать', 50, 160, (255, 255, 255))
+        render_and_blit_text(screen, 25, 'наспех то, что должно было быть для работы игры. Из-за этого все скины', 50, 180, (255, 255, 255))
+        render_and_blit_text(screen, 25, 'доступны сразу, а буст на игру можно выбрать бесплатно.', 50, 200, (255, 255, 255))
 
         if self.curr_pl == 1:
             x, y = 1275, 15
         else:
             x, y = 1275, 75
         size = 210, 60
-        bottom = pygame.Surface(size)
-        bottom.set_alpha(100)
-        bottom.fill((0, 255, 0))
-        screen.blit(bottom, (x, y))
+        create_and_blit_surface(screen, x, y, size, (0, 255, 0), 100)
 
         screen.blit(*self.bottom1)
         screen.blit(*self.bottom2)
-        line = self.font0.render('Игрок 1', True, (255, 255, 255))
-        screen.blit(line, (1292, 17))
-        line = self.font0.render('Игрок 2', True, (255, 255, 255))
-        screen.blit(line, (1292, 77))
+        render_and_blit_text(screen, 45, 'Игрок 1', 1292, 17, (255, 255, 255))
+        render_and_blit_text(screen, 45, 'Игрок 2', 1292, 77, (255, 255, 255))
         screen.blit(*self.btn_back)
         screen.blit(*self.btn_right)
         screen.blit(*self.btn_left)
@@ -85,8 +58,7 @@ class Shop:
         for i in range(self.ind, self.ind + 5):
             try:
                 screen.blit(*pic(self.boosts[i % len(self.boosts)][0], (50 + cnt * 300, 350), add=(200, 200)))
-                line = self.font.render(self.boosts[i % len(self.boosts)][1], True, (255, 255, 255))
-                screen.blit(line, (50 + cnt * 300, 600))
+                render_and_blit_text(screen, 35, self.boosts[i % len(self.boosts)][1], 50 + cnt * 300, 600, (255, 255, 255))
             except Exception:
                 cnt += 1
                 continue
