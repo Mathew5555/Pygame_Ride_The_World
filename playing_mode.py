@@ -507,7 +507,7 @@ class Game:
 def game(clr1, clr2):
     global MAP_NAME
     MAP_NAME = random.choice(["map2.tmx"])
-    joy = True
+    joy = False
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE2)
     pygame.display.set_caption('Ride The World - BETA 1.0')

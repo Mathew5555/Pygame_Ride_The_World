@@ -20,6 +20,13 @@ pygame.mixer.music.set_volume(0.5)
 
 
 if __name__ == '__main__':
+    joy = input('Вы будете играть с джойстиком или без? (Введите "да" или "нет" без кавычек): ')
+    while joy not in ['да', 'нет']:
+        joy = input('Вы будете играть с джойстиком или без? (Введите "да" или "нет" без кавычек): ')
+    if joy == 'да':
+        joy = True
+    else:
+        joy = False
     FON = split_animated_gif('klee', screen=screen)
     running = True
     ind = 0

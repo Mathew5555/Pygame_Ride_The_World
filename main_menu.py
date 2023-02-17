@@ -9,6 +9,7 @@ from guide_window import guide
 from wardrobe_window import wb
 from account_info_window import acc
 from playing_mode import game
+from shop import shop
 
 
 pygame.init()
@@ -241,7 +242,7 @@ class Menu:
         info()
 
     def open_shop(self):
-        pass
+        shop()
 
     def open_wb(self):
         wb()
@@ -281,7 +282,7 @@ def time_to_game(menu, timer):
 
 def main():
     global RUNNING
-    joy = True
+    joy = False
     con = sqlite3.connect('data/account_info.db')
     cur = con.cursor()
     res = cur.execute("""SELECT curr_skin FROM info""").fetchall()
