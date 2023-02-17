@@ -64,10 +64,7 @@ class Hero(pygame.sprite.Sprite):
         self.player_id = player_id
         self.joy = joy
         self.joystick = joystick
-
         self.gravity = 1
-        self.speed_x = 3 * speed_coeff
-        self.speed_y = 6 * speed_coeff
         self.fly = 0
         self.climb = False
 
@@ -84,6 +81,19 @@ class Hero(pygame.sprite.Sprite):
         self.die_flag = 0
         self.gun_coeff = gun_coeff
 
+        con = sqlite3.connect('data/account_info.db')
+        cur = con.cursor()
+        res = cur.execute(f"""SELECT boosts FROM info WHERE id = {self.player_id}""").fetchall()[0][0]
+        con.close()
+        print(res)
+        if 'gun' in res:
+            self.gun_coeff = for_game[res]
+        elif 'health' in res:
+            self.health += for_game[res]
+        elif 'speed' in res:
+            speed_coeff = for_game[res]
+        self.speed_x = 3 * speed_coeff
+        self.speed_y = 6 * speed_coeff
         self.color = color
         self.sheet()
         if self.player_id == 1:
@@ -170,7 +180,7 @@ class Hero(pygame.sprite.Sprite):
         flag = 0
         if self.button(keys, "left"):
             left_tile = get_tile_properties(game_map.map, self.rect.midleft[0] - self.speed_x,
-                                            self.rect.bottomleft[1] - 5, map_flag)
+                                            self.rect.bottomleft[1] - self.speed_y + 1, map_flag)
             if left_tile['solid'] == 0:
                 self.rect.x -= self.speed_x
                 if self.direction == "right":
@@ -185,7 +195,7 @@ class Hero(pygame.sprite.Sprite):
             self.direction = "left"
         if self.button(keys, "right"):
             right_tile = get_tile_properties(game_map.map, self.rect.midright[0] + self.speed_x,
-                                             self.rect.bottomright[1] - 5, map_flag)
+                                             self.rect.bottomright[1] - self.speed_y + 1, map_flag)
             if right_tile['solid'] == 0:
                 self.rect.x += self.speed_x
                 if self.direction == "left":
@@ -199,12 +209,19 @@ class Hero(pygame.sprite.Sprite):
                 self.gun.update(0, 0, flag=-1)
             self.direction = "right"
         if self.direction == "right":
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1], map_flag)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomleft[0],
+                                              self.rect.bottomleft[1] + 3,
+                                              map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomright[0],
+                                               self.rect.bottomright[1],
+                                               map_flag)
         else:
-            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0], self.rect.bottomright[1] + 3, map_flag)
-            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0], self.rect.bottomleft[1] + 3, map_flag)
-        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0], self.rect.midbottom[1] - 3, map_flag + 2)
+            standing_on = get_tile_properties(game_map.map, self.rect.bottomright[0],
+                                              self.rect.bottomright[1] + self.speed_y / 2, map_flag)
+            standing_on2 = get_tile_properties(game_map.map, self.rect.bottomleft[0],
+                                               self.rect.bottomleft[1] + self.speed_y / 2, map_flag)
+        ladder_check = get_tile_properties(game_map.map, self.rect.midbottom[0],
+                                           self.rect.midbottom[1] - self.speed_y / 2, map_flag + 2)
         if self.button(keys, "up"):
             if ladder_check["climb"] + ladder_check["climb"] >= 1:
                 self.climb = True
@@ -233,8 +250,10 @@ class Hero(pygame.sprite.Sprite):
                 self.jump_frame = 0
                 self.climb_flag -= 1
             if self.jump_frame > 0:
-                above_tile = get_tile_properties(game_map.map, self.rect.topleft[0], self.rect.topleft[1], map_flag)
-                above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0], self.rect.topright[1], map_flag)
+                above_tile = get_tile_properties(game_map.map, self.rect.topleft[0],
+                                                 self.rect.topleft[1], map_flag)
+                above_tile2 = get_tile_properties(game_map.map, self.rect.topright[0],
+                                                  self.rect.topright[1], map_flag)
                 if above_tile['up_solid'] + above_tile2['up_solid'] == 0:
                     self.rect.y -= self.speed_y
                     self.gun.update(0, -self.speed_y)
