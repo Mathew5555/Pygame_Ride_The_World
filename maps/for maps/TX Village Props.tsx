@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset version="1.9" tiledversion="1.9.2" name="TX Village Props" tilewidth="32" tileheight="32" tilecount="256" columns="16">
- <image source="../tiles/TX Village Props.png" width="512" height="512"/>
+ <image source="TX Village Props.png" width="512" height="512"/>
  <tile id="53">
   <objectgroup draworder="index" id="3">
    <object id="8" x="3.38454" y="13.4576" width="30.1385" height="21.1937"/>
