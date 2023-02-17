@@ -59,6 +59,16 @@ class Shop:
             True, (255, 255, 255))
         screen.blit(line, (50, 200))
 
+        if self.curr_pl == 1:
+            x, y = 1275, 15
+        else:
+            x, y = 1275, 75
+        size = 210, 60
+        bottom = pygame.Surface(size)
+        bottom.set_alpha(100)
+        bottom.fill((0, 255, 0))
+        screen.blit(bottom, (x, y))
+
         screen.blit(*self.bottom1)
         screen.blit(*self.bottom2)
         line = self.font0.render('Игрок 1', True, (255, 255, 255))

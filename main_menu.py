@@ -30,7 +30,7 @@ class Hero(pygame.sprite.Sprite):
         self.joystick = joystick
 
         self.gravity = 1
-        self.speed_x = 5
+        self.speed_x = 7
         self.speed_y = 5
         self.fly = 0
 
@@ -116,7 +116,8 @@ class Hero(pygame.sprite.Sprite):
 
     def move(self, keys):
         flag = 0
-        flag_collide = pygame.sprite.spritecollideany(self, PLATFORMS)
+        ups = any([self.rect.bottom <= i.rect.top + 5 and i.rect.left - 3 <= self.rect.centerx <= i.rect.right + 3 for i in PLATFORMS.sprites()])
+        flag_collide = pygame.sprite.spritecollideany(self, PLATFORMS) and ups
         if self.button(keys, "left"):
             self.rect.x -= self.speed_x
             if flag_collide:
