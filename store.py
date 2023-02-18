@@ -421,7 +421,7 @@ while running:
                             main_bought[0] = 1
                         else: #если покупают бусты
                             tovar = boosts_photo[0]
-                            main_bought[0] = 1
+                            main_bought = sold_boosts
                         renew_db(players_money, tovar, flag, id)
                         new(mainlist, maintext, maincost, main_bought)
 
