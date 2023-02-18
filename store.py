@@ -4,8 +4,6 @@ import os
 import sys
 import sqlite3
 import sys
-from PyQt5.QtWidgets import QMainWindow, QTableWidgetItem, QMessageBox
-from PyQt5.QtWidgets import *
 
 
 id = 1 #сюда передается айди игрока
@@ -259,7 +257,7 @@ def load_image(name, colorkey=None):
 
 FPS = 60
 WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 1500, 1000
-bg = pygame.image.load("images\store2.png")
+bg = pygame.image.load("images/store2.png")
 pygame.init()
 #pygame.mixer.music.load("music\paradise.mp3")
 #pygame.mixer.music.play()
