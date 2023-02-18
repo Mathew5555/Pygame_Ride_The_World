@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="1">
+ <tileset firstgid="1" source="for maps/Иллюстрация-без-названия (29).tsx"/>
+ <tileset firstgid="290" source="for maps/Иллюстрация-без-названия (30).tsx"/>
+ <tileset firstgid="579" source="for maps/Иллюстрация-без-названия (28).tsx"/>
+ <tileset firstgid="868" source="for maps/itemsheet.tsx"/>
+ <layer id="5" name="фон" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwTEBAAAAwqD1T20IX6AAAAAAAIDXABdwAAE=
+  </data>
+ </layer>
+ <layer id="1" name="земля" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1ElSwlAUQNFPVgBUsRLpXYB0OwOlmyKdTqVnGQjSzqQHl+GdMwhYnxDJu1VnksH7L01FKUmSpPvrwaWUHwHX9c+Q7qMg7zKEMCKI4tFG7/fc/Z64FkMcCSSRstF92H0/q0pzzxk84wVZ5JBHAUUNz8SKM0rMeEUZFVRRQx1veP8nZ3wwo4EmWmijgy566DvwG5Wcm9tQygOvcetNTrtkL7cN99fdgH/TJ4YY4QtjTDDFDHMsTP5huub8tW/mLrHCGhtsscMeBxzxY3K+rjmSJDkrnyGEfr/E5VaT
+  </data>
+ </layer>
+ <layer id="2" name="трава" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt11kOgjAYReG/LEWjqDvEAYdtqTiiy9Ljk0pAYhQp5n7JeaAkbUOTJpiJiNy1nFnbNX8N+Z0OZ9mlkHrUp4FH5+v7/uQ9Q85uRGOaUExTmtGcFh+ebeSqX0NE/lhg5oK6N/HscruzPNxXXZZ8jxWtKaENbWlHezrQkVI60bngzv/WPCIiTVV2/+WNZ58f/9GK5suO581bdg+/ei9ShSvFZESj
+  </data>
+ </layer>
+ <layer id="3" name="лестницы" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlNEJwDAIBSWTuVczQjNCO0K7Yv0OgUSI0YZ3fwHxcRglAgAAAAD4L0ciyil+zx6n5JXJmRY9PTIv6Xcv9rDIxDxiZXp4GM2DxYPndu1mWuwHl8Uejzi8lYf2/tf18ua82KOF9q953KcRdvHQ7ozHfRoB84jFLh6tWzyzHgAPPpxAKTc=
+  </data>
+ </layer>
+ <layer id="4" name="декорация" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt1LsNgDAMhGEX7AMbwGieJjwW4LUcZ1EiAgWh+j/pushnNzEDAAAAAOBZU5nXSqn5mh0dxXW6oS14h2ZHBwBcTGY+2v3/k5ReGX7b6KQ+V6+nzG5Bu8cNtuvdlnk7K4uyfrnkC+pz9fr8cId2jxuAIg497Ban
+  </data>
+ </layer>
+</map>
