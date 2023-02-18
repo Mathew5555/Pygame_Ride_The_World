@@ -37,8 +37,10 @@ def renew_db(players_money, tovar, flag, id):
             f'''SELECT boosts FROM info where id = "{id}"''').fetchall()
         str1 = ''
         for el in bought_s1:
+            print(el)
             l = el
         for el in l:
+            print(el)
             str1 = str1 + el
         str1 = str1 + f'images/{tovar};'
         cur.execute(f"""UPDATE info
@@ -480,8 +482,8 @@ while running:
                 new(skins_photo, text_skins, cost_skins, main_bought)
                 mainlist = skins_photo
                 maintext = text_skins
-                renew_db()
             if second.rect.collidepoint(x, y):
+                screen.blit(bg, (0, 0))
                 id = 2
                 id_new(2)
                 itemsgrp = pygame.sprite.Group()
