@@ -25,18 +25,22 @@ def renew_db(players_money, tovar, flag, id):
             f'''SELECT skins FROM info where id = "{id}"''').fetchall()
         str1 = ''
         for el in bought_s1:
+            l = el
+        for el in l:
             str1 = str1 + el
-        str1 = str1 + f'images/{tovar}'
+        str1 = str1 + f'images/{tovar};'
         cur.execute(f"""UPDATE info
             SET skins = '{str1}'
             WHERE id = '{id}'""")
     else:
         bought_s1 = cur.execute(
-            f'''SELECT skins FROM info where id = "{id}"''').fetchall()
+            f'''SELECT boosts FROM info where id = "{id}"''').fetchall()
         str1 = ''
         for el in bought_s1:
+            l = el
+        for el in l:
             str1 = str1 + el
-        str1 = str1 + f'images/{tovar}'
+        str1 = str1 + f'images/{tovar};'
         cur.execute(f"""UPDATE info
                     SET boosts = '{str1}'
                     WHERE id = '{id}'""")
@@ -72,11 +76,11 @@ def id_new(id):
     bought_skins = ''
     for el in bought_s:
         bought_skins = el[0]
-    bought_skin = str(bought_skins).replace('(', '').replace(')', '').split(';')
+    bought_skin = str(bought_skins)[:-1].replace('(', '').replace(')', '').split(';')
     for i in range(len(bought_skin)):
         bought_skin[i] = bought_skin[i].split('/')[-1]
 
-    sold_skins = [0, 0, 0, 0, 0]
+    sold_skins = [0, 0, 0, 0]
     for i in range(len(skins_photo)):
         if skins_photo[i] in bought_skin:
             sold_skins[i] = 1
@@ -86,13 +90,16 @@ def id_new(id):
     players_m = cur.execute(
         f'''SELECT coins FROM info where id = "{id}"''').fetchall()
     for el in players_m:
-        if el[0]:
+        if int(el[0]) >= 0:
             players_money = int(el[0])
-    players_money = int(players_money)
+    print(players_money)
 
 
 def new(spisok, text_spisok, cost, bought):
-    global buy1, buy2, buy3, buy4, screen, bg
+    global buy1, buy2, buy3, buy4, screen, bg, players_money
+    v = f"money {str(players_money)}"
+    text_pm = font.render(v, True, (255, 255, 255))
+    screen.blit(text_pm, (970, 60))
     item1 = pygame.sprite.Sprite()
     item1.image = load_image(spisok[0])
     text1 = font.render(text_spisok[0], True, (255, 255, 255))
@@ -325,12 +332,12 @@ btns.add(back)
 back.rect.x = 1200
 back.rect.y = 25
 
-skins_photo = ['hudPlayer_beige.png', 'hudPlayer_blue.png', 'hudPlayer_green.png', 'hudPlayer_pink.png', 'hudPlayer_yellow.png']
+skins_photo = ['hudPlayer_beige.png', 'hudPlayer_blue.png', 'hudPlayer_green.png', 'hudPlayer_pink.png']
 boosts_photo = ['fight.png', 'speed.png', 'hp.png', '2x.png', '3x.png', '4x.png']
-skins_items = ['beige skin', 'blue skin', 'green skin', 'pink skin', 'yellow skin']
+skins_items = ['beige skin', 'blue skin', 'green skin', 'pink skin']
 boosts_items = ['fight', 'speed', 'hp', '2x', '3x', '4x']
 text_boosts = ['+1 урон', '+5% speed', '+2 ХП', '2x очки', '3x очки', '4x очки']
-text_skins = ['beige skin', 'blue skin', 'green skin', 'pink skin', 'yellow skin']
+text_skins = ['beige skin', 'blue skin', 'green skin', 'pink skin']
 flag = 1
 
 id_new(1)
@@ -365,6 +372,7 @@ while running:
                 maincost = maincost[-1:] + maincost[:-1]
                 main_bought = main_bought[-1:] + main_bought[:-1]
                 new(mainlist, maintext, maincost, main_bought)
+                print(main_bought)
                 pygame.display.flip()
             if left.rect.collidepoint(x, y):
                 clear()
@@ -375,6 +383,7 @@ while running:
                 maincost = maincost[1:] + maincost[:1]
                 main_bought = main_bought[1:] + main_bought[:1]
                 new(mainlist, maintext, maincost, main_bought)
+                print(main_bought)
                 pygame.display.flip()
             if boosts.rect.collidepoint(x, y):
                 clear()
@@ -400,27 +409,31 @@ while running:
                 pygame.display.flip()
             if back.rect.collidepoint(x, y):
                 back_door()
-            if buy1 != 0 and buy1.rect.collidepoint(x, y):
-                if not main_bought[0]: #если товар возможно купить
+            if buy1!= 0 and buy1.rect.collidepoint(x, y):
+                if not main_bought[0]:
                     if players_money >= maincost[0]: #если хватает денег на покупку товара
                         players_money = players_money - maincost[0]
                         if flag: #если покупают скины
                             tovar = skins_photo[0]
                             sold_skins[0] = 1
+                            main_bought[0] = 1
                         else: #если покупают бусты
                             tovar = boosts_photo[0]
+                            main_bought[0] = 1
                         renew_db(players_money, tovar, flag, id)
                         new(mainlist, maintext, maincost, main_bought)
 
             if buy2 != 0 and buy2.rect.collidepoint(x, y):
-                if not main_bought[1]:  # если товар возможно купить
+                if not main_bought[3]:
                     if players_money >= maincost[1]:  # если хватает денег на покупку товара
                         players_money = players_money - maincost[1]
                         if flag:  # если покупают скины
                             tovar = skins_photo[1]
                             sold_skins[1] = 1
+                            main_bought = sold_skins
                         else:  # если покупают бусты
                             tovar = boosts_photo[1]
+                            main_bought = sold_boosts
                         renew_db(players_money, tovar, flag, id)
                         new(mainlist, maintext, maincost, main_bought)
 
@@ -431,8 +444,10 @@ while running:
                         if flag:  # если покупают скины
                             tovar = skins_photo[2]
                             sold_skins[2] = 1
+                            main_bought = sold_skins
                         else:  # если покупают бусты
                             tovar = boosts_photo[2]
+                            main_bought = sold_boosts
                         renew_db(players_money, tovar, flag, id)
                         new(mainlist, maintext, maincost, main_bought)
 
@@ -444,17 +459,43 @@ while running:
                         if flag:  # если покупают скины
                             tovar = skins_photo[3]
                             sold_skins[3] = 1
+                            main_bought = sold_skins
                         else:  # если покупают бусты
                             tovar = boosts_photo[3]
+                            main_bought = sold_boosts
                         renew_db(players_money, tovar, flag, id)
                         new(mainlist, maintext, maincost, main_bought)
 
             if first.rect.collidepoint(x, y):
                 id = 1
                 id_new(1)
+                itemsgrp = pygame.sprite.Group()
+                font = pygame.font.Font(FONT, 40)
+                pygame.display.flip()
+                running = True
+                mainlist = []
+                mainlist1 = []
+                maincost = cost_skins
+                main_bought = sold_skins
+                new(skins_photo, text_skins, cost_skins, main_bought)
+                mainlist = skins_photo
+                maintext = text_skins
+                renew_db()
             if second.rect.collidepoint(x, y):
                 id = 2
                 id_new(2)
+                itemsgrp = pygame.sprite.Group()
+                font = pygame.font.Font(FONT, 40)
+                pygame.display.flip()
+                running = True
+                mainlist = []
+                mainlist1 = []
+                maincost = cost_skins
+                main_bought = sold_skins
+                new(skins_photo, text_skins, cost_skins, main_bought)
+                mainlist = skins_photo
+                maintext = text_skins
+
 
 
 
