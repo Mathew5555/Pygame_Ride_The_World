@@ -65,8 +65,6 @@ class Hero(pygame.sprite.Sprite):
         self.joystick = joystick
 
         self.gravity = 1
-        self.speed_x = 3 * speed_coeff
-        self.speed_y = 6 * speed_coeff
         self.fly = 0
         self.climb = False
 
@@ -82,6 +80,19 @@ class Hero(pygame.sprite.Sprite):
         self.fire = 20
         self.die_flag = 0
         self.gun_coeff = gun_coeff
+
+        con = sqlite3.connect('data/account_info.db')
+        cur = con.cursor()
+        res = cur.execute(f"""SELECT boosts FROM info WHERE id = {self.player_id}""").fetchall()[0][0]
+        con.close()
+        if 'gun' in res:
+            self.gun_coeff = for_game[res]
+        elif 'health' in res:
+            self.health += for_game[res]
+        elif 'speed' in res:
+            speed_coeff = for_game[res]
+        self.speed_x = 3 * speed_coeff
+        self.speed_y = 6 * speed_coeff
 
         self.color = color
         self.sheet()
@@ -470,11 +481,14 @@ class Game:
             con = sqlite3.connect('data/account_info.db')
             cur = con.cursor()
             curr_blncs = cur.execute("""SELECT coins FROM info""").fetchall()
+            curr_kills = cur.execute("""SELECT kills FROM info""").fetchall()
             # winner updating
             cur.execute("""UPDATE info SET coins = ? WHERE id = ?""",
                         (prize[0] + curr_blncs[0][0], winner_id,))
             cur.execute("""UPDATE info SET coins = ? WHERE id = ?""",
                         (prize[1] + curr_blncs[1][0], loser_id,))
+            cur.execute("""UPDATE info SET kills = ? WHERE id = ?""",
+                        (1 + curr_kills[winner_id - 1][0], winner_id,))
             con.commit()
             con.close()
             UPDATED = True
@@ -496,13 +510,14 @@ class Game:
         return not self.flag == 60
 
 
-def game(clr1, clr2):
+def game(clr1, clr2, joy):
     global MAP_NAME
-    MAP_NAME = random.choice(["map_tartaglia.tmx", "map_2.tmx", "map2.tmx", "map3.tmx"])
-    joy = False
+    temp = random.choice([("map_tartaglia.tmx", 's_fon.jpeg'), ("map_2.tmx", 'ly_fon.png'),
+                          ("map2.tmx", 'back.jpg'), ("map3.tmx", 'i_fon.jpeg')])
+    MAP_NAME = temp[0]
     pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE2)
-    pygame.display.set_caption('Ride The World - BETA 1.0')
+    pygame.display.set_caption('Ride The World - ver 1.0')
     pygame.display.flip()
     if joy:
         joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
@@ -511,7 +526,7 @@ def game(clr1, clr2):
         hero1 = Hero(1, 0, 20, joy, clr1, joystick=joysticks[0])
         hero2 = Hero(2, 1570, 20, joy, clr2, joystick=joysticks[1])
     else:
-        hero1 = Hero(1, 0, 20, joy, clr1, speed_coeff=1.5)
+        hero1 = Hero(1, 0, 20, joy, clr1)
         hero2 = Hero(2, 1550, 20, joy, clr2)
     map = Map(MAP_NAME, [])
     game = Game(map, hero1, hero2)
@@ -519,9 +534,9 @@ def game(clr1, clr2):
     clock = pygame.time.Clock()
 
     running = True
-    fon = pygame.transform.scale(load_image(IMAGES_DIR + 'back.jpg'), (WINDOW_WIDTH2, WINDOW_HEIGHT2))
+    fon = pygame.transform.scale(load_image(IMAGES_DIR + temp[1]), (WINDOW_WIDTH2, WINDOW_HEIGHT2))
     pygame.mixer.init()
-    pygame.mixer.music.load(random.choice([MUSIC_DIR + 'mond' + f'{i}.mp3' for i in range(1, 3)]))
+    pygame.mixer.music.load(random.choice([MUSIC_DIR + f'{i}.mp3' for i in range(1, 12)]))
     pygame.mixer.music.play(999)
     sound_level = float(
         open('data/sound.txt', mode='r', encoding='utf-8').readlines()[0].strip('\n'))
@@ -535,6 +550,8 @@ def game(clr1, clr2):
             if event.type == pygame.QUIT:
                 flag_closed = True
                 running = False
+                game.hero1.gun.kill()
+                game.hero2.gun.kill()
                 break
         if hero1.die_flag and hero2.die_flag:
             running = False
@@ -563,4 +580,4 @@ def game(clr1, clr2):
 
 
 if __name__ == '__main__':
-    game('blue', 'yellow')
+    game('blue', 'yellow', False)

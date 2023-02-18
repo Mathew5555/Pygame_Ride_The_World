@@ -18,7 +18,7 @@ class Account:
         self.info = self.cur.execute(f"SELECT * FROM info").fetchall()
         self.im1 = none_im if self.info[0][-1] is None else self.info[0][-1]
         self.im2 = none_im if self.info[1][-1] is None else self.info[1][-1]
-        self.info = [[*self.info[0][:5], self.info[0][6]], [*self.info[1][:5], self.info[1][6]]]
+        self.info = [[*self.info[0][:4], self.info[0][6]], [*self.info[1][:4], self.info[1][6]]]
         self.clr = (250, 235, 215)
 
     def render(self, screen):
@@ -29,7 +29,7 @@ class Account:
 
         screen.blit(*pic(self.im1 + '/stand.png', (50, 150), add=(150, 150)))
         screen.blit(*pic(self.im2 + '/stand.png', (50 + x, 150), add=(150, 150)))
-        t = len(self.info[0]) - 1
+        t = len(self.info[0])
         text = ['ID', 'Уровень игрока:', 'Баланс монет:', 'Кол-во убийств:', 'Лучший результат:']
         for i in range(t):
             render_and_blit_text(screen, 40, text[i], 50, 320 + i * 120, (255, 255, 255))
